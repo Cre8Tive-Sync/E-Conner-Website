@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Municipality of Conner — Official Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root {
+  --forest: #0a1f12; --deep: #0d2b1a; --green: #1a4d2e; --mid: #2d7a4f;
+  --bright: #4caf79; --pale: #a8d5b5; --gold: #c8922a; --gold-light: #e8b84b;
+  --serif: 'Cormorant Garamond', serif; --sans: 'Outfit', sans-serif;
+  --rail-w: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100vh; width: 100vw; overflow: hidden; }
+body { font-family: var(--sans); background: var(--forest); color: white; cursor: none; display: flex; user-select: none; }
+
+/* CURSOR */
+.cursor { width: 8px; height: 8px; background: var(--bright); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .2s, height .2s, background .2s; }
+.cursor-ring { width: 32px; height: 32px; border: 1.5px solid rgba(76,175,121,0.5); border-radius: 50%; position: fixed; pointer-events: none; z-index: 99998; transform: translate(-50%,-50%); transition: width .25s, height .25s, border-color .25s; }
+.cursor.big { width: 14px; height: 14px; background: var(--gold); }
+.cursor-ring.big { width: 44px; height: 44px; border-color: rgba(200,146,42,0.5); }
+
+/* PRELOADER */
+.preloader { position: fixed; inset: 0; background: var(--forest); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; z-index: 99990; transition: opacity .6s ease; }
+.preloader.out { opacity: 0; pointer-events: none; }
+.pre-ring { width: 72px; height: 72px; border-radius: 50%; border: 1px solid rgba(76,175,121,0.15); border-top-color: var(--bright); animation: spin 1.2s linear infinite; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pre-text { font-family: var(--serif); font-size: 13px; letter-spacing: 0.3em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+
+/* AMBIENT */
+.ambient { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; }
+.orb { position: absolute; border-radius: 50%; filter: blur(100px); animation: orbFloat 12s ease-in-out infinite; }
+.orb-1 { width: 600px; height: 600px; background: rgba(45,122,79,0.12); top: -200px; right: -100px; }
+.orb-2 { width: 400px; height: 400px; background: rgba(200,146,42,0.06); bottom: -100px; left: 20%; animation-delay: -6s; }
+.orb-3 { width: 300px; height: 300px; background: rgba(76,175,121,0.08); top: 30%; left: 30%; animation-delay: -3s; }
+@keyframes orbFloat { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-40px) scale(1.08); } }
+
+/* RAIL */
+.rail { width: var(--rail-w); flex-shrink: 0; background: rgba(10,31,18,0.95); border-right: 1px solid rgba(76,175,121,0.08); display: flex; flex-direction: column; align-items: center; padding: 16px 0; gap: 4px; position: relative; z-index: 100; height: 100vh; backdrop-filter: blur(20px); }
+.rail-logo { width: 38px; height: 38px; border-radius: 50%; background: rgba(76,175,121,0.12); border: 1px solid rgba(76,175,121,0.25); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; flex-shrink: 0; transition: all .3s; cursor: none; }
+.rail-logo:hover { background: rgba(76,175,121,0.2); transform: scale(1.05); }
+.rail-divider { width: 28px; height: 1px; background: rgba(255,255,255,0.07); margin: 8px 0; flex-shrink: 0; }
+.rail-btn { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; cursor: none; position: relative; transition: all .25s; color: rgba(255,255,255,0.3); flex-shrink: 0; border: 1px solid transparent; }
+.rail-btn:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.rail-btn.active { background: rgba(76,175,121,0.15); color: var(--bright); border-color: rgba(76,175,121,0.2); }
+.rail-btn .tip { position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%) translateX(-4px); background: rgba(13,43,26,0.97); color: white; font-size: 11px; white-space: nowrap; padding: 5px 10px; border-radius: 6px; pointer-events: none; opacity: 0; transition: opacity .2s, transform .2s; border: 1px solid rgba(76,175,121,0.15); letter-spacing: 0.04em; backdrop-filter: blur(8px); z-index: 200; }
+.rail-btn:hover .tip { opacity: 1; transform: translateY(-50%) translateX(0); }
+.rail-spacer { flex: 1; }
+.rail-pst { font-size: 8px; color: rgba(255,255,255,0.2); letter-spacing: 0.06em; text-align: center; line-height: 1.6; padding: 0 4px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; z-index: 10; height: 100vh; min-height: 0; }
+
+/* TOPBAR */
+.topbar { height: 52px; flex-shrink: 0; background: rgba(10,31,18,0.7); border-bottom: 1px solid rgba(76,175,121,0.08); display: flex; align-items: center; padding: 0 24px; backdrop-filter: blur(20px); position: relative; z-index: 50; }
+.topbar-section { font-family: var(--serif); font-size: 17px; font-weight: 400; color: white; letter-spacing: 0.02em; margin-right: auto; display: flex; align-items: center; gap: 10px; }
+.topbar-section span { font-size: 12px; color: rgba(255,255,255,0.3); font-family: var(--sans); font-weight: 300; font-style: italic; }
+.topbar-tabs { display: flex; height: 100%; }
+.topbar-tab { padding: 0 18px; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.35); cursor: none; transition: all .25s; display: flex; align-items: center; border-bottom: 2px solid transparent; font-weight: 400; }
+.topbar-tab:hover { color: rgba(255,255,255,0.7); }
+.topbar-tab.active { color: var(--bright); border-bottom-color: var(--bright); }
+.topbar-right { display: flex; align-items: center; gap: 12px; margin-left: 24px; }
+.topbar-clock { font-size: 12px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; font-weight: 300; }
+.topbar-govph { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.2); padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.08); }
+
+/* CONTENT */
+.content { flex: 1; overflow: hidden; position: relative; min-height: 0; }
+.panel { position: absolute; inset: 0; height: 100%; opacity: 0; pointer-events: none; transform: translateX(16px); transition: opacity .35s ease, transform .35s ease; overflow-y: auto; overflow-x: hidden; }
+.panel.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.panel::-webkit-scrollbar { width: 4px; }
+.panel::-webkit-scrollbar-thumb { background: rgba(76,175,121,0.2); border-radius: 2px; }
+.p-inner { padding: 32px; max-width: 1100px; }
+.p-header { margin-bottom: 24px; }
+.p-eyebrow { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--bright); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.p-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--bright); }
+.p-title { font-family: var(--serif); font-size: 36px; font-weight: 300; color: white; }
+.p-title em { font-style: italic; color: var(--pale); }
+
+/* MARQUEE */
+.marquee-wrap { background: rgba(76,175,121,0.06); border: 1px solid rgba(76,175,121,0.1); border-radius: 8px; padding: 10px 0; overflow: hidden; margin-bottom: 24px; }
+.marquee-track { display: flex; animation: marquee 35s linear infinite; white-space: nowrap; }
+.m-item { display: inline-flex; align-items: center; gap: 20px; padding: 0 28px; font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.m-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--bright); flex-shrink: 0; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* GLASS CARDS */
+.glass-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.1); border-radius: 14px; padding: 28px; transition: all .3s; }
+.glass-card:hover { background: rgba(255,255,255,0.05); }
+.glass-card.full { grid-column: 1/-1; }
+.card-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bright); margin-bottom: 10px; }
+.card-title { font-family: var(--serif); font-size: 26px; font-weight: 300; color: white; margin-bottom: 12px; }
+.card-body { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.8; font-weight: 300; }
+
+/* HOME */
+.home-hero { display: grid; grid-template-columns: 1fr 340px; gap: 24px; margin-bottom: 24px; }
+.home-hero-main { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.1); border-radius: 16px; padding: 40px; position: relative; overflow: hidden; min-height: 240px; display: flex; flex-direction: column; justify-content: flex-end; }
+.home-hero-main::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 80% 20%, rgba(76,175,121,0.12), transparent 60%); }
+.home-hero-eyebrow { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--bright); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.home-hero-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--bright); }
+.home-hero-title { font-family: var(--serif); font-size: 52px; font-weight: 300; color: white; line-height: 1.0; margin-bottom: 6px; }
+.home-hero-title em { font-style: italic; color: var(--pale); }
+.home-hero-sub { font-size: 13px; color: rgba(255,255,255,0.35); font-weight: 300; letter-spacing: 0.08em; text-transform: uppercase; }
+.home-hero-side { display: flex; flex-direction: column; gap: 12px; }
+.stat-tile { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.1); border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; transition: all .3s; }
+.stat-tile:hover { background: rgba(76,175,121,0.07); border-color: rgba(76,175,121,0.2); transform: translateY(-2px); }
+.stat-tile-num { font-family: var(--serif); font-size: 40px; font-weight: 300; color: white; line-height: 1; margin-bottom: 4px; }
+.stat-tile-label { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; }
+.stat-tile-accent { position: absolute; top: 16px; right: 16px; width: 8px; height: 8px; border-radius: 50%; background: var(--bright); opacity: .4; }
+.home-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+.home-news-title { font-family: var(--serif); font-size: 22px; font-weight: 400; color: white; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.home-news-title a { font-size: 12px; color: var(--bright); font-family: var(--sans); font-weight: 400; letter-spacing: 0.06em; cursor: none; text-decoration: none; }
+.news-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: none; transition: all .25s; }
+.news-item:last-child { border-bottom: none; }
+.news-item:hover .news-item-title { color: var(--bright); }
+.news-item-thumb { width: 56px; height: 56px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.nt-1 { background: linear-gradient(135deg,#1a4d2e,#2d7a4f); }
+.nt-2 { background: linear-gradient(135deg,#0d2b1a,#1a4d2e); }
+.nt-3 { background: linear-gradient(135deg,#0d2218,#1a3d28); }
+.nt-4 { background: linear-gradient(135deg,#2b1a0d,#4d3520); }
+.news-item-tag { font-size: 10px; color: var(--bright); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.news-item-title { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.4; margin-bottom: 4px; transition: color .25s; }
+.news-item-date { font-size: 11px; color: rgba(255,255,255,0.25); }
+.home-quick { display: flex; flex-direction: column; gap: 8px; }
+.quick-item { padding: 16px 20px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); display: flex; align-items: center; gap: 14px; cursor: none; transition: all .25s; }
+.quick-item:hover { background: rgba(76,175,121,0.08); border-color: rgba(76,175,121,0.2); transform: translateX(4px); }
+.quick-icon { font-size: 20px; flex-shrink: 0; }
+.quick-name { font-size: 14px; color: rgba(255,255,255,0.75); }
+.quick-sub { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+.quick-arrow { margin-left: auto; color: rgba(255,255,255,0.2); font-size: 14px; transition: transform .25s, color .25s; }
+.quick-item:hover .quick-arrow { transform: translateX(4px); color: var(--bright); }
+
+/* PROFILE */
+.profile-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.officials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 8px; }
+.official-card { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 16px 12px; text-align: center; border: 1px solid rgba(76,175,121,0.08); transition: all .3s; cursor: none; }
+.official-card:hover { background: rgba(76,175,121,0.08); border-color: rgba(76,175,121,0.2); transform: translateY(-3px); }
+.official-avatar { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 10px; background: linear-gradient(135deg,var(--green),var(--mid)); display: flex; align-items: center; justify-content: center; font-size: 20px; border: 2px solid rgba(76,175,121,0.2); }
+.official-name { font-size: 13px; color: rgba(255,255,255,0.8); font-weight: 500; margin-bottom: 3px; }
+.official-pos { font-size: 11px; color: rgba(255,255,255,0.3); }
+.vm-badge { display: inline-block; font-size: 9px; padding: 2px 8px; border-radius: 20px; background: rgba(200,146,42,0.15); color: var(--gold-light); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+.vm-text { font-family: var(--serif); font-style: italic; font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.8; margin-top: 10px; }
+.barangay-list { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-top: 8px; }
+.bgy-item { font-size: 12px; color: rgba(255,255,255,0.45); padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid rgba(76,175,121,0.06); display: flex; align-items: center; gap: 6px; transition: all .25s; cursor: none; }
+.bgy-item:hover { background: rgba(76,175,121,0.07); color: rgba(255,255,255,0.7); }
+.bgy-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--mid); flex-shrink: 0; }
+
+/* NEWS */
+.news-cat-filters { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+.cat-filter { padding: 5px 14px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 20px; border: 1px solid rgba(76,175,121,0.15); color: rgba(255,255,255,0.4); cursor: none; transition: all .25s; font-family: var(--sans); background: transparent; }
+.cat-filter:hover { border-color: rgba(76,175,121,0.35); color: rgba(255,255,255,0.7); }
+.cat-filter.active { background: rgba(76,175,121,0.15); border-color: var(--bright); color: var(--bright); }
+.news-panel-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+.news-big-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.1); border-radius: 14px; overflow: hidden; cursor: none; transition: all .3s; }
+.news-big-card:hover { border-color: rgba(76,175,121,0.25); transform: translateY(-3px); }
+.news-big-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 60px; background: linear-gradient(160deg,#1a4d2e,#0d2b1a); }
+.news-big-body { padding: 24px; }
+.news-small-list { display: flex; flex-direction: column; gap: 8px; }
+.news-small-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); border-radius: 10px; padding: 16px; cursor: none; transition: all .3s; display: flex; gap: 14px; }
+.news-small-card:hover { background: rgba(76,175,121,0.07); border-color: rgba(76,175,121,0.2); }
+.nsc-icon { font-size: 22px; flex-shrink: 0; width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.ni-a { background: rgba(45,122,79,0.2); } .ni-b { background: rgba(200,146,42,0.15); } .ni-c { background: rgba(76,175,121,0.15); } .ni-d { background: rgba(168,213,181,0.1); }
+.nsc-title { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.4; margin-bottom: 4px; }
+.nsc-meta { font-size: 11px; color: rgba(255,255,255,0.25); display: flex; gap: 8px; }
+.nsc-tag { color: var(--bright); }
+
+/* SERVICES */
+.services-grid-panel { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+.svc-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); border-radius: 14px; padding: 24px; cursor: none; transition: all .35s; position: relative; overflow: hidden; }
+.svc-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--bright); transform: scaleX(0); transition: transform .35s ease; transform-origin: left; }
+.svc-card:hover { background: rgba(76,175,121,0.08); border-color: rgba(76,175,121,0.2); transform: translateY(-4px); }
+.svc-card:hover::after { transform: scaleX(1); }
+.svc-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+.svc-name { font-family: var(--serif); font-size: 20px; color: white; margin-bottom: 8px; }
+.svc-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7; font-weight: 300; }
+.svc-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-size: 11px; color: var(--bright); letter-spacing: 0.08em; text-transform: uppercase; opacity: 0; transform: translateY(4px); transition: all .3s; }
+.svc-card:hover .svc-link { opacity: 1; transform: translateY(0); }
+.forms-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+.form-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); border-radius: 10px; cursor: none; transition: all .25s; }
+.form-item:hover { background: rgba(76,175,121,0.07); border-color: rgba(76,175,121,0.2); transform: translateX(4px); }
+.form-name { font-size: 13px; color: rgba(255,255,255,0.7); flex: 1; }
+.form-office { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+.form-dl { font-size: 11px; color: var(--bright); letter-spacing: 0.06em; text-transform: uppercase; opacity: 0; transition: opacity .25s; }
+.form-item:hover .form-dl { opacity: 1; }
+
+/* TRANSPARENCY */
+.trans-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+.trans-doc-list { display: flex; flex-direction: column; gap: 6px; }
+.trans-doc { display: flex; align-items: center; gap: 14px; padding: 16px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); border-radius: 10px; cursor: none; transition: all .25s; position: relative; overflow: hidden; }
+.trans-doc::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--bright); border-radius: 3px 0 0 3px; transform: scaleY(0); transition: transform .3s; }
+.trans-doc:hover { background: rgba(76,175,121,0.07); transform: translateX(6px); }
+.trans-doc:hover::before { transform: scaleY(1); }
+.trans-doc-icon { font-size: 20px; flex-shrink: 0; }
+.trans-doc-name { flex: 1; font-size: 14px; color: rgba(255,255,255,0.7); }
+.trans-doc-sub { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 2px; }
+.trans-doc-year { font-size: 12px; color: rgba(255,255,255,0.25); margin-right: 8px; }
+.trans-doc-dl { font-size: 11px; color: var(--bright); letter-spacing: 0.06em; text-transform: uppercase; opacity: 0; transition: opacity .25s; white-space: nowrap; }
+.trans-doc:hover .trans-doc-dl { opacity: 1; }
+.trans-side { display: flex; flex-direction: column; gap: 12px; }
+.compliance-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.1); border-radius: 14px; padding: 24px; text-align: center; }
+.compliance-num { font-family: var(--serif); font-size: 64px; font-weight: 300; color: var(--bright); line-height: 1; }
+.compliance-label { font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px; }
+.compliance-quote { font-family: var(--serif); font-style: italic; font-size: 14px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-top: 16px; }
+.nbc-badge { background: rgba(200,146,42,0.1); border: 1px solid rgba(200,146,42,0.2); border-radius: 10px; padding: 16px; font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+.nbc-badge strong { color: var(--gold-light); }
+.year-filter { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.yr-btn { padding: 4px 12px; font-size: 11px; border-radius: 20px; border: 1px solid rgba(76,175,121,0.15); color: rgba(255,255,255,0.4); cursor: none; transition: all .25s; letter-spacing: 0.06em; background: transparent; font-family: var(--sans); }
+.yr-btn.active { background: rgba(76,175,121,0.15); border-color: var(--bright); color: var(--bright); }
+.yr-btn:hover { border-color: rgba(76,175,121,0.35); color: rgba(255,255,255,0.7); }
+
+/* TOURISM */
+.tourism-hero-banner { border-radius: 16px; padding: 48px 40px; background: linear-gradient(135deg,rgba(10,31,18,0.9),rgba(26,77,46,0.6)); border: 1px solid rgba(76,175,121,0.15); margin-bottom: 20px; display: flex; align-items: flex-end; min-height: 180px; position: relative; overflow: hidden; }
+.tourism-hero-banner::before { content: '🌿🏔️💧'; position: absolute; right: 40px; top: 50%; transform: translateY(-50%); font-size: 64px; opacity: .15; letter-spacing: 10px; }
+.tourism-banner-title { font-family: var(--serif); font-size: 40px; font-weight: 300; color: white; }
+.tourism-banner-title em { font-style: italic; color: var(--pale); }
+.tourism-banner-sub { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; }
+.tourism-spots-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+.spot-card { border-radius: 14px; overflow: hidden; cursor: none; transition: all .35s; background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); }
+.spot-card:hover { transform: translateY(-6px); border-color: rgba(76,175,121,0.25); }
+.spot-img { height: 140px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+.sp-1 { background: linear-gradient(160deg,#0d4020,#1a6635); }
+.sp-2 { background: linear-gradient(160deg,#0d2b3a,#1a4d5e); }
+.sp-3 { background: linear-gradient(160deg,#2b1a0d,#4d3a1a); }
+.spot-body { padding: 16px; }
+.spot-name { font-size: 15px; font-family: var(--serif); color: white; margin-bottom: 4px; }
+.spot-desc { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+.isnag-section { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.culture-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); border-radius: 14px; padding: 24px; transition: all .3s; }
+.culture-card:hover { background: rgba(76,175,121,0.06); }
+.culture-card-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+.culture-card-title { font-family: var(--serif); font-size: 22px; color: white; margin-bottom: 10px; }
+.culture-card-body { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; }
+
+/* CONTACT */
+.contact-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+.contact-form-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.1); border-radius: 16px; padding: 32px; }
+.form-group { margin-bottom: 20px; }
+.form-label { display: block; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px; font-weight: 500; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(76,175,121,0.12); color: white; font-family: var(--sans); font-size: 14px; outline: none; border-radius: 8px; transition: border-color .25s; -webkit-appearance: none; }
+.form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: rgba(76,175,121,0.4); background: rgba(255,255,255,0.07); }
+.form-select option { background: var(--deep); color: white; }
+.form-textarea { min-height: 110px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-btn { width: 100%; padding: 14px; background: var(--mid); color: white; border: none; font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; cursor: none; border-radius: 8px; transition: all .3s; }
+.form-btn:hover { background: var(--bright); color: var(--forest); }
+.contact-info-wrap { display: flex; flex-direction: column; gap: 10px; }
+.contact-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(76,175,121,0.08); border-radius: 12px; padding: 18px 20px; display: flex; gap: 14px; align-items: flex-start; transition: all .3s; }
+.contact-tile:hover { background: rgba(76,175,121,0.07); border-color: rgba(76,175,121,0.18); }
+.ct-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.ct-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 4px; }
+.ct-value { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.map-block { border-radius: 12px; overflow: hidden; border: 1px solid rgba(76,175,121,0.1); height: 160px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; background: linear-gradient(160deg,var(--forest),var(--deep)); position: relative; }
+.map-block::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(76,175,121,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(76,175,121,0.04) 1px,transparent 1px); background-size: 24px 24px; }
+.map-pin { font-size: 28px; animation: pinBounce 2s ease-in-out infinite; position: relative; z-index: 1; }
+@keyframes pinBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.map-label { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; position: relative; z-index: 1; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 28px; right: 28px; z-index: 9999; background: rgba(26,77,46,0.97); border: 1px solid rgba(76,175,121,0.3); padding: 14px 20px; border-radius: 10px; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(12px); transform: translateY(80px); opacity: 0; transition: all .4s ease; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-text { font-size: 13px; color: rgba(255,255,255,0.8); }
+</style>
+</head>
+<body>
+
+<div class="preloader" id="preloader">
+  <div class="pre-ring">🌿</div>
+  <p class="pre-text">Municipality of Conner</p>
+</div>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="ambient">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- RAIL -->
+<div class="rail">
+  <div class="rail-logo" onclick="navigate('home')">🌿</div>
+  <div class="rail-divider"></div>
+  <div class="rail-btn active" id="rail-home" onclick="navigate('home')">⌂<span class="tip">Home</span></div>
+  <div class="rail-btn" id="rail-profile" onclick="navigate('profile')">🏛<span class="tip">Municipal Profile</span></div>
+  <div class="rail-btn" id="rail-news" onclick="navigate('news')">📰<span class="tip">News & Announcements</span></div>
+  <div class="rail-btn" id="rail-services" onclick="navigate('services')">📋<span class="tip">Online Services</span></div>
+  <div class="rail-btn" id="rail-transparency" onclick="navigate('transparency')">🔍<span class="tip">Transparency</span></div>
+  <div class="rail-btn" id="rail-tourism" onclick="navigate('tourism')">🌿<span class="tip">Tourism</span></div>
+  <div class="rail-spacer"></div>
+  <div class="rail-divider"></div>
+  <div class="rail-btn" id="rail-contact" onclick="navigate('contact')">✉<span class="tip">Contact & Feedback</span></div>
+  <div class="rail-pst" id="railClock">--:--</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-section" id="topbarTitle">Municipality of Conner <span>Official Website</span></div>
+    <div class="topbar-tabs" id="topbarTabs"></div>
+    <div class="topbar-right">
+      <div class="topbar-clock" id="topClock">--:--:-- PST</div>
+      <div class="topbar-govph">Republic of the Philippines</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div class="panel active" id="panel-home">
+      <div class="p-inner">
+        <div class="marquee-wrap">
+          <div class="marquee-track">
+            <span class="m-item"><span class="m-dot"></span>Welcome to the official website of the Municipality of Conner, Apayao</span>
+            <span class="m-item"><span class="m-dot"></span>Home of the Isnag people · Cordillera Administrative Region</span>
+            <span class="m-item"><span class="m-dot"></span>Downloadable government forms now available online</span>
+            <span class="m-item"><span class="m-dot"></span>For inquiries contact the Municipal Hall · Caglayan, Conner, Apayao</span>
+            <span class="m-item"><span class="m-dot"></span>Welcome to the official website of the Municipality of Conner, Apayao</span>
+            <span class="m-item"><span class="m-dot"></span>Home of the Isnag people · Cordillera Administrative Region</span>
+            <span class="m-item"><span class="m-dot"></span>Downloadable government forms now available online</span>
+            <span class="m-item"><span class="m-dot"></span>For inquiries contact the Municipal Hall · Caglayan, Conner, Apayao</span>
+          </div>
+        </div>
+        <div class="home-hero">
+          <div class="home-hero-main">
+            <div class="home-hero-eyebrow">Province of Apayao · CAR</div>
+            <div class="home-hero-title">Municipality<br>of <em>Conner</em></div>
+            <div class="home-hero-sub">Official Government Information Portal</div>
+          </div>
+          <div class="home-hero-side">
+            <div class="stat-tile"><div class="stat-tile-accent"></div><div class="stat-tile-num" data-count="28360">0</div><div class="stat-tile-label">Population (2024)</div></div>
+            <div class="stat-tile"><div class="stat-tile-accent"></div><div class="stat-tile-num" data-count="21">0</div><div class="stat-tile-label">Barangays</div></div>
+            <div class="stat-tile"><div class="stat-tile-accent"></div><div class="stat-tile-num" data-count="694">0</div><div class="stat-tile-label">km² Land Area</div></div>
+          </div>
+        </div>
+        <div class="home-grid">
+          <div>
+            <div class="home-news-title">Latest Updates <a href="#" onclick="navigate('news');return false;">View all →</a></div>
+            <div class="news-item"><div class="news-item-thumb nt-1">📊</div><div><div class="news-item-tag">Announcement</div><div class="news-item-title">Municipal Budget Transparency Report Now Available for Public Review</div><div class="news-item-date">March 15, 2026</div></div></div>
+            <div class="news-item"><div class="news-item-thumb nt-2">🌿</div><div><div class="news-item-tag">Tourism</div><div class="news-item-title">Conner Joins Apayao Biosphere Reserve Initiative</div><div class="news-item-date">March 10, 2026</div></div></div>
+            <div class="news-item"><div class="news-item-thumb nt-3">📋</div><div><div class="news-item-tag">Services</div><div class="news-item-title">New Business Permit Forms Now Available Online</div><div class="news-item-date">March 5, 2026</div></div></div>
+            <div class="news-item"><div class="news-item-thumb nt-4">⚖️</div><div><div class="news-item-tag">Ordinance</div><div class="news-item-title">SB Enacts Ordinance No. 2026-003 on Waste Management</div><div class="news-item-date">Feb 28, 2026</div></div></div>
+          </div>
+          <div class="home-quick">
+            <div class="quick-item" onclick="navigate('services')"><span class="quick-icon">📋</span><div><div class="quick-name">Downloadable Forms</div><div class="quick-sub">Permits, clearances & registrations</div></div><span class="quick-arrow">→</span></div>
+            <div class="quick-item" onclick="navigate('transparency')"><span class="quick-icon">🔍</span><div><div class="quick-name">Transparency Portal</div><div class="quick-sub">Budgets, ordinances, COA reports</div></div><span class="quick-arrow">→</span></div>
+            <div class="quick-item" onclick="navigate('profile')"><span class="quick-icon">🏛</span><div><div class="quick-name">Municipal Officials</div><div class="quick-sub">Mayor, Vice Mayor, Councilors</div></div><span class="quick-arrow">→</span></div>
+            <div class="quick-item" onclick="navigate('tourism')"><span class="quick-icon">🌿</span><div><div class="quick-name">Tourism</div><div class="quick-sub">Destinations & Isnag heritage</div></div><span class="quick-arrow">→</span></div>
+            <div class="quick-item" onclick="navigate('contact')"><span class="quick-icon">✉️</span><div><div class="quick-name">Contact & Feedback</div><div class="quick-sub">Send us your concerns</div></div><span class="quick-arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="panel" id="panel-profile">
+      <div class="p-inner">
+        <div class="p-header"><div class="p-eyebrow">Municipal Profile</div><div class="p-title">About <em>Conner</em></div></div>
+        <div class="profile-layout">
+          <div class="glass-card"><div class="card-label">History</div><div class="card-title">Named after an American Engineer</div><div class="card-body">Conner is a 2nd-class municipality in the province of Apayao, Cordillera Administrative Region. It was named after Norman Conner, an American engineer who oversaw the construction of the main roads that effectively ended the isolation of Apayao from the outside world during the early American era.</div></div>
+          <div class="glass-card"><div class="card-label">Vision & Mission</div><div class="card-title">Our Commitment</div><div class="vm-text">"A progressive, self-reliant, and empowered Municipality of Conner with God-fearing, peace-loving, and law-abiding citizens."</div></div>
+          <div class="glass-card full"><div class="card-label">Elected Officials</div><div class="card-title">Leadership</div><div class="officials-grid"><div class="official-card"><div class="official-avatar">👤</div><div class="official-name">Hon. [Mayor Name]</div><div class="official-pos">Municipal Mayor</div><div class="vm-badge">Mayor</div></div><div class="official-card"><div class="official-avatar">👤</div><div class="official-name">Hon. [Vice Mayor]</div><div class="official-pos">Vice Mayor</div></div><div class="official-card"><div class="official-avatar">👤</div><div class="official-name">Hon. [Councilor 1]</div><div class="official-pos">SB Member</div></div><div class="official-card"><div class="official-avatar">👤</div><div class="official-name">Hon. [Councilor 2]</div><div class="official-pos">SB Member</div></div><div class="official-card"><div class="official-avatar">👤</div><div class="official-name">Hon. [Councilor 3]</div><div class="official-pos">SB Member</div></div><div class="official-card"><div class="official-avatar">👤</div><div class="official-name">Hon. [Councilor 4]</div><div class="official-pos">SB Member</div></div></div></div>
+          <div class="glass-card full"><div class="card-label">Barangay Directory</div><div class="card-title">21 Barangays</div><div class="barangay-list"><div class="bgy-item"><div class="bgy-dot"></div>Balugbo</div><div class="bgy-item"><div class="bgy-dot"></div>Bulu</div><div class="bgy-item"><div class="bgy-dot"></div>Caglayan</div><div class="bgy-item"><div class="bgy-dot"></div>Daga</div><div class="bgy-item"><div class="bgy-dot"></div>Dibuluan</div><div class="bgy-item"><div class="bgy-dot"></div>Dipusu</div><div class="bgy-item"><div class="bgy-dot"></div>Duplicasan</div><div class="bgy-item"><div class="bgy-dot"></div>Eleazar</div><div class="bgy-item"><div class="bgy-dot"></div>Emiliana</div><div class="bgy-item"><div class="bgy-dot"></div>Imelda</div><div class="bgy-item"><div class="bgy-dot"></div>Lucab</div><div class="bgy-item"><div class="bgy-dot"></div>Luna Norte</div><div class="bgy-item"><div class="bgy-dot"></div>Luna Sur</div><div class="bgy-item"><div class="bgy-dot"></div>Malama</div><div class="bgy-item"><div class="bgy-dot"></div>Manag</div><div class="bgy-item"><div class="bgy-dot"></div>Nabuangan</div><div class="bgy-item"><div class="bgy-dot"></div>Paddaya</div><div class="bgy-item"><div class="bgy-dot"></div>Poblacion</div><div class="bgy-item"><div class="bgy-dot"></div>Quirino</div><div class="bgy-item"><div class="bgy-dot"></div>Salvacion</div><div class="bgy-item"><div class="bgy-dot"></div>Santa Filomena</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEWS -->
+    <div class="panel" id="panel-news">
+      <div class="p-inner">
+        <div class="p-header"><div class="p-eyebrow">Latest Updates</div><div class="p-title">News & <em>Announcements</em></div></div>
+        <div class="news-cat-filters">
+          <button class="cat-filter active">All</button><button class="cat-filter">News</button><button class="cat-filter">Announcement</button><button class="cat-filter">Event</button><button class="cat-filter">Ordinance</button>
+        </div>
+        <div class="news-panel-grid">
+          <div class="news-big-card"><div class="news-big-img">📊</div><div class="news-big-body"><span style="font-size:10px;color:var(--bright);letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:8px">Announcement</span><div style="font-family:var(--serif);font-size:22px;color:white;line-height:1.3;margin-bottom:8px">Municipal Budget Transparency Report Now Available for Public Review</div><div style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:12px">The municipality of Conner is pleased to announce that the full budget transparency report for fiscal year 2025 is now available for public viewing.</div><div style="font-size:12px;color:rgba(255,255,255,0.25)">March 15, 2026 · Mayor's Office</div></div></div>
+          <div class="news-small-list">
+            <div class="news-small-card"><div class="nsc-icon ni-a">🌿</div><div><div class="nsc-title">Conner Joins Apayao Biosphere Reserve Initiative</div><div class="nsc-meta"><span class="nsc-tag">Tourism</span><span>Mar 10, 2026</span></div></div></div>
+            <div class="news-small-card"><div class="nsc-icon ni-b">📋</div><div><div class="nsc-title">New Business Permit Forms Now Available Online</div><div class="nsc-meta"><span class="nsc-tag">Services</span><span>Mar 5, 2026</span></div></div></div>
+            <div class="news-small-card"><div class="nsc-icon ni-c">⚖️</div><div><div class="nsc-title">SB Enacts Ordinance No. 2026-003 on Waste Management</div><div class="nsc-meta"><span class="nsc-tag">Ordinance</span><span>Feb 28, 2026</span></div></div></div>
+            <div class="news-small-card"><div class="nsc-icon ni-d">🏥</div><div><div class="nsc-title">Apayao General Hospital Renamed and Expanded</div><div class="nsc-meta"><span class="nsc-tag">News</span><span>Feb 20, 2026</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="panel" id="panel-services">
+      <div class="p-inner">
+        <div class="p-header"><div class="p-eyebrow">Government Services</div><div class="p-title">Online <em>Services</em></div></div>
+        <div class="services-grid-panel">
+          <div class="svc-card"><span class="svc-icon">📋</span><div class="svc-name">Downloadable Forms</div><div class="svc-desc">Access official government forms for permits, clearances, and registrations from any device.</div><div class="svc-link">Access Forms →</div></div>
+          <div class="svc-card"><span class="svc-icon">🏢</span><div class="svc-name">Business Permits</div><div class="svc-desc">Requirements, fees, and step-by-step guide for obtaining or renewing your business permit.</div><div class="svc-link">Learn More →</div></div>
+          <div class="svc-card"><span class="svc-icon">📜</span><div class="svc-name">Civil Registry</div><div class="svc-desc">Birth certificates, marriage licenses, death certificates and civil registration documents.</div><div class="svc-link">Learn More →</div></div>
+          <div class="svc-card"><span class="svc-icon">🏠</span><div class="svc-name">Barangay Services</div><div class="svc-desc">Barangay clearance, indigency certificates, and community-level service requests.</div><div class="svc-link">Learn More →</div></div>
+          <div class="svc-card"><span class="svc-icon">🌱</span><div class="svc-name">Agriculture Office</div><div class="svc-desc">Farming assistance, crop insurance, and agricultural support programs for Conner farmers.</div><div class="svc-link">Learn More →</div></div>
+          <div class="svc-card"><span class="svc-icon">🛠️</span><div class="svc-name">Engineering Office</div><div class="svc-desc">Building permits, infrastructure requests, and engineering certifications.</div><div class="svc-link">Learn More →</div></div>
+        </div>
+        <div class="p-eyebrow" style="margin-bottom:14px">Frequently Downloaded</div>
+        <div class="forms-grid">
+          <div class="form-item"><span style="font-size:18px">📄</span><div><div class="form-name">Business Permit Application</div><div class="form-office">Mayor's Office</div></div><span class="form-dl">↓ PDF</span></div>
+          <div class="form-item"><span style="font-size:18px">📄</span><div><div class="form-name">Barangay Clearance Request</div><div class="form-office">Barangay Affairs</div></div><span class="form-dl">↓ PDF</span></div>
+          <div class="form-item"><span style="font-size:18px">📄</span><div><div class="form-name">Indigency Certificate</div><div class="form-office">Social Welfare Office</div></div><span class="form-dl">↓ PDF</span></div>
+          <div class="form-item"><span style="font-size:18px">📄</span><div><div class="form-name">Building Permit Application</div><div class="form-office">Municipal Engineer</div></div><span class="form-dl">↓ PDF</span></div>
+          <div class="form-item"><span style="font-size:18px">📄</span><div><div class="form-name">Local Employment Form</div><div class="form-office">PESO Office</div></div><span class="form-dl">↓ PDF</span></div>
+          <div class="form-item"><span style="font-size:18px">📄</span><div><div class="form-name">FOI Request Form</div><div class="form-office">Mayor's Office</div></div><span class="form-dl">↓ PDF</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSPARENCY -->
+    <div class="panel" id="panel-transparency">
+      <div class="p-inner">
+        <div class="p-header"><div class="p-eyebrow">Open Government · NBC 542</div><div class="p-title">Transparency <em>Portal</em></div></div>
+        <div class="year-filter"><button class="yr-btn active">All Years</button><button class="yr-btn">2026</button><button class="yr-btn">2025</button><button class="yr-btn">2024</button><button class="yr-btn">2023</button></div>
+        <div class="trans-layout">
+          <div class="trans-doc-list">
+            <div class="trans-doc"><span class="trans-doc-icon">📊</span><div><div class="trans-doc-name">Annual Budget 2026</div><div class="trans-doc-sub">Approved Municipal Budget · FY 2026</div></div><span class="trans-doc-year">2026</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+            <div class="trans-doc"><span class="trans-doc-icon">📊</span><div><div class="trans-doc-name">Annual Budget 2025</div><div class="trans-doc-sub">Approved Municipal Budget · FY 2025</div></div><span class="trans-doc-year">2025</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+            <div class="trans-doc"><span class="trans-doc-icon">💰</span><div><div class="trans-doc-name">Statement of Receipts & Expenditures</div><div class="trans-doc-sub">Financial performance for FY 2025</div></div><span class="trans-doc-year">2025</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+            <div class="trans-doc"><span class="trans-doc-icon">📋</span><div><div class="trans-doc-name">COA Annual Audit Report</div><div class="trans-doc-sub">Commission on Audit findings · 2024</div></div><span class="trans-doc-year">2024</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+            <div class="trans-doc"><span class="trans-doc-icon">⚖️</span><div><div class="trans-doc-name">Ordinance No. 2026-003 — Waste Management</div><div class="trans-doc-sub">Enacted February 28, 2026</div></div><span class="trans-doc-year">2026</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+            <div class="trans-doc"><span class="trans-doc-icon">⚖️</span><div><div class="trans-doc-name">Ordinance No. 2025-001 — Revenue Code Amendment</div><div class="trans-doc-sub">Enacted January 10, 2025</div></div><span class="trans-doc-year">2025</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+            <div class="trans-doc"><span class="trans-doc-icon">📌</span><div><div class="trans-doc-name">FOI Manual — Freedom of Information Policy</div><div class="trans-doc-sub">EO 2 s.2016 Compliance Document</div></div><span class="trans-doc-year">2023</span><span class="trans-doc-dl">↓ Download PDF</span></div>
+          </div>
+          <div class="trans-side">
+            <div class="compliance-card"><div class="compliance-num" data-count="100">0</div><div class="compliance-label">% NBC 542 Compliance</div><div class="compliance-quote">"A government that is transparent is a government that the people can trust."</div></div>
+            <div class="nbc-badge"><strong>NBC 542 Compliant</strong> — All required transparency documents are published in compliance with National Budget Circular 542 requirements for LGUs.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOURISM -->
+    <div class="panel" id="panel-tourism">
+      <div class="p-inner">
+        <div class="tourism-hero-banner"><div><div class="tourism-banner-title">Discover<br><em>Conner</em></div><div class="tourism-banner-sub">Nature · Culture · Heritage</div></div></div>
+        <div class="tourism-spots-grid">
+          <div class="spot-card"><div class="spot-img sp-1">🏔️</div><div class="spot-body"><div class="spot-name">Apayao-Abulug River</div><div class="spot-desc">A majestic river flowing through Conner, part of the UNESCO-listed Apayao Biosphere Reserve.</div></div></div>
+          <div class="spot-card"><div class="spot-img sp-2">💧</div><div class="spot-body"><div class="spot-name">Natural Springs</div><div class="spot-desc">Cool, clear springs nestled in the mountains of Conner, accessible via scenic forest trails.</div></div></div>
+          <div class="spot-card"><div class="spot-img sp-3">🌳</div><div class="spot-body"><div class="spot-name">Dipterocarp Forest</div><div class="spot-desc">Home to lawaan trees, Rafflesia flowers, and critically endangered wildlife of the Cordillera.</div></div></div>
+        </div>
+        <div class="isnag-section">
+          <div class="culture-card"><div class="culture-card-label">Indigenous Heritage</div><div class="culture-card-title">The Isnag People</div><div class="culture-card-body">The Isnag are the indigenous people of Apayao. In Conner, the Nabwangan dialect is spoken. Their rich oral traditions, weaving arts, and ancestral practices are preserved across the municipality's upland communities.</div></div>
+          <div class="culture-card"><div class="culture-card-label">Tourism Contact</div><div class="culture-card-title">Plan Your Visit</div><div class="culture-card-body" style="margin-bottom:16px">Our tourism office is ready to assist visitors in exploring the best of Conner.</div><div style="display:flex;flex-direction:column;gap:8px"><div style="font-size:13px;color:rgba(255,255,255,0.5);display:flex;gap:10px"><span>📞</span><span>+63 960 429 4262</span></div><div style="font-size:13px;color:rgba(255,255,255,0.5);display:flex;gap:10px"><span>✉️</span><span>connerapayaotourism@gmail.com</span></div><div style="font-size:13px;color:rgba(255,255,255,0.5);display:flex;gap:10px"><span>📘</span><span>@tourismofconner</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="panel" id="panel-contact">
+      <div class="p-inner">
+        <div class="p-header"><div class="p-eyebrow">Get In Touch</div><div class="p-title">Contact & <em>Feedback</em></div></div>
+        <div class="contact-layout">
+          <div class="contact-form-wrap">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" placeholder="Juan dela Cruz"></div>
+              <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input" placeholder="juan@example.com"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Department</label><select class="form-select"><option value="">Select a department</option><option>Mayor's Office</option><option>Civil Registrar</option><option>Municipal Assessor</option><option>Tourism Office</option><option>Municipal Engineer</option><option>General Inquiry</option></select></div>
+            <div class="form-group"><label class="form-label">Subject</label><input type="text" class="form-input" placeholder="Brief subject of your message"></div>
+            <div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" placeholder="Type your message here..."></textarea></div>
+            <button class="form-btn" onclick="sendMsg()">Send Message →</button>
+          </div>
+          <div class="contact-info-wrap">
+            <div class="contact-tile"><span class="ct-icon">📍</span><div><div class="ct-label">Address</div><div class="ct-value">Municipal Hall, Caglayan<br>Conner, Apayao, Philippines</div></div></div>
+            <div class="contact-tile"><span class="ct-icon">📞</span><div><div class="ct-label">Tourism Office</div><div class="ct-value">+63 960 429 4262</div></div></div>
+            <div class="contact-tile"><span class="ct-icon">✉️</span><div><div class="ct-label">Tourism Email</div><div class="ct-value">connerapayaotourism@gmail.com</div></div></div>
+            <div class="contact-tile"><span class="ct-icon">🕐</span><div><div class="ct-label">Office Hours</div><div class="ct-value">Monday – Friday<br>8:00 AM – 5:00 PM</div></div></div>
+            <div class="map-block"><div class="map-pin">📍</div><div class="map-label">Conner, Apayao · CAR, Philippines</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span style="font-size:18px">✓</span>
+  <span class="toast-text">Message sent! We'll get back to you within 3 business days.</span>
+</div>
+
+<script>
+// CURSOR
+var cur = document.getElementById('cursor');
+var ring = document.getElementById('cursorRing');
+var mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
+(function animRing(){ rx += (mx-rx)*0.13; ry += (my-ry)*0.13; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); })();
+document.querySelectorAll('.rail-btn,.quick-item,.news-item,.svc-card,.trans-doc,.form-item,.news-small-card,.news-big-card,.spot-card,.stat-tile,.official-card,.bgy-item,.contact-tile,.culture-card,.cat-filter,.yr-btn,.form-btn').forEach(function(el){
+  el.addEventListener('mouseenter', function(){ cur.classList.add('big'); ring.classList.add('big'); });
+  el.addEventListener('mouseleave', function(){ cur.classList.remove('big'); ring.classList.remove('big'); });
+});
+
+// CLOCK
+function tick() {
+  var t = new Date().toLocaleTimeString('en-PH', {timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+  document.getElementById('topClock').textContent = t + ' PST';
+  document.getElementById('railClock').textContent = t;
+}
+tick(); setInterval(tick, 1000);
+
+// NAV
+var navConfig = {
+  home:         { title:'Municipality of Conner', sub:'Official Website', tabs:[] },
+  profile:      { title:'Municipal Profile', sub:'Conner, Apayao', tabs:['Overview','Officials','Barangays'] },
+  news:         { title:'News & Announcements', sub:'Latest Updates', tabs:['All','News','Announcements','Events'] },
+  services:     { title:'Online Services', sub:'Government Services', tabs:['All Services','Forms','Guides'] },
+  transparency: { title:'Transparency Portal', sub:'NBC 542 Compliant', tabs:['All Documents','Budget','Ordinances','FOI'] },
+  tourism:      { title:'Tourism', sub:'Discover Conner', tabs:['Destinations','Culture','Contact'] },
+  contact:      { title:'Contact & Feedback', sub:'Get In Touch', tabs:[] }
+};
+var current = 'home';
+
+function navigate(id) {
+  if (current === id) return;
+  document.getElementById('rail-'+current).classList.remove('active');
+  document.getElementById('panel-'+current).classList.remove('active');
+  current = id;
+  document.getElementById('rail-'+id).classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+  var cfg = navConfig[id];
+  document.getElementById('topbarTitle').innerHTML = cfg.title + (cfg.sub ? ' <span>'+cfg.sub+'</span>' : '');
+  var tabsEl = document.getElementById('topbarTabs');
+  tabsEl.innerHTML = '';
+  cfg.tabs.forEach(function(t, i) {
+    var btn = document.createElement('div');
+    btn.className = 'topbar-tab' + (i===0?' active':'');
+    btn.textContent = t;
+    btn.onclick = function(){ tabsEl.querySelectorAll('.topbar-tab').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); };
+    tabsEl.appendChild(btn);
+  });
+  if (id === 'transparency') {
+    setTimeout(function(){
+      document.querySelectorAll('#panel-transparency [data-count]').forEach(function(el){ animCount(el); });
+    }, 200);
+  }
+}
+
+// COUNTERS
+function animCount(el) {
+  if (el.dataset.animated) return;
+  el.dataset.animated = 'true';
+  var target = parseInt(el.dataset.count);
+  var dur = 1400;
+  var start = performance.now();
+  function tick(now) {
+    var p = Math.min((now-start)/dur, 1);
+    var e = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.floor(e*target).toLocaleString();
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = target.toLocaleString();
+  }
+  requestAnimationFrame(tick);
+}
+function runCounters() {
+  document.querySelectorAll('[data-count]').forEach(function(el){ animCount(el); });
+}
+
+// FILTERS
+document.querySelectorAll('.cat-filter, .yr-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var group = btn.closest('.news-cat-filters, .year-filter');
+    group.querySelectorAll('.cat-filter, .yr-btn').forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+  });
+});
+
+// FORM
+function sendMsg() {
+  var t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 4000);
+}
+
+// AMBIENT PARALLAX
+document.addEventListener('mousemove', function(e){
+  var x = (e.clientX/window.innerWidth - 0.5)*20;
+  var y = (e.clientY/window.innerHeight - 0.5)*20;
+  document.querySelector('.orb-1').style.transform = 'translate('+x*0.5+'px,'+y*0.5+'px)';
+  document.querySelector('.orb-2').style.transform = 'translate('+-x*0.3+'px,'+-y*0.3+'px)';
+  document.querySelector('.orb-3').style.transform = 'translate('+x*0.2+'px,'+y*0.4+'px)';
+});
+
+// PRELOADER — dismiss immediately, no dependency on external resources
+function dismissPreloader() {
+  var pre = document.getElementById('preloader');
+  pre.classList.add('out');
+  setTimeout(function(){ pre.style.display='none'; }, 700);
+  runCounters();
+}
+setTimeout(dismissPreloader, 800);
+</script>
+</body>
+</html>
