@@ -1,0 +1,82 @@
+'use client';
+
+interface ProfilePanelProps {
+  isActive: boolean;
+}
+
+export default function ProfilePanel({ isActive }: ProfilePanelProps) {
+  const officials = [
+    { name: 'Hon. [Mayor Name]', pos: 'Municipal Mayor', badge: 'Mayor' },
+    { name: 'Hon. [Vice Mayor]', pos: 'Vice Mayor', badge: null },
+    { name: 'Hon. [Councilor 1]', pos: 'SB Member', badge: null },
+    { name: 'Hon. [Councilor 2]', pos: 'SB Member', badge: null },
+    { name: 'Hon. [Councilor 3]', pos: 'SB Member', badge: null },
+    { name: 'Hon. [Councilor 4]', pos: 'SB Member', badge: null },
+  ];
+
+  const barangays = [
+    'Balugbo', 'Bulu', 'Caglayan', 'Daga', 'Dibuluan', 'Dipusu', 'Duplicasan',
+    'Eleazar', 'Emiliana', 'Imelda', 'Lucab', 'Luna Norte', 'Luna Sur', 'Malama',
+    'Manag', 'Nabuangan', 'Paddaya', 'Poblacion', 'Quirino', 'Salvacion', 'Santa Filomena'
+  ];
+
+  return (
+    <div className={`panel ${isActive ? 'active' : ''}`}>
+      <div className="p-inner">
+        <div className="p-header">
+          <div className="p-eyebrow">Municipal Profile</div>
+          <div className="p-title">About <em>Conner</em></div>
+        </div>
+        
+        <div className="profile-layout">
+          <div className="glass-card">
+            <div className="card-label">History</div>
+            <div className="card-title">Named after an American Engineer</div>
+            <div className="card-body">
+              Conner is a 2nd-class municipality in the province of Apayao, Cordillera Administrative Region. 
+              It was named after Norman Conner, an American engineer who oversaw the construction of the main 
+              roads that effectively ended the isolation of Apayao from the outside world during the early American era.
+            </div>
+          </div>
+          
+          <div className="glass-card">
+            <div className="card-label">Vision & Mission</div>
+            <div className="card-title">Our Commitment</div>
+            <div className="vm-text">
+              &quot;A progressive, self-reliant, and empowered Municipality of Conner with God-fearing, 
+              peace-loving, and law-abiding citizens.&quot;
+            </div>
+          </div>
+          
+          <div className="glass-card full">
+            <div className="card-label">Elected Officials</div>
+            <div className="card-title">Leadership</div>
+            <div className="officials-grid">
+              {officials.map((official, index) => (
+                <div key={index} className="official-card">
+                  <div className="official-avatar">👤</div>
+                  <div className="official-name">{official.name}</div>
+                  <div className="official-pos">{official.pos}</div>
+                  {official.badge && <div className="vm-badge">{official.badge}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="glass-card full">
+            <div className="card-label">Barangay Directory</div>
+            <div className="card-title">21 Barangays</div>
+            <div className="barangay-list">
+              {barangays.map((barangay, index) => (
+                <div key={index} className="bgy-item">
+                  <div className="bgy-dot"></div>
+                  {barangay}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
