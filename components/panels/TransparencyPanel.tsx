@@ -1,0 +1,102 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+
+interface TransparencyPanelProps {
+  isActive: boolean;
+}
+
+export default function TransparencyPanel({ isActive }: TransparencyPanelProps) {
+  const [activeYear, setActiveYear] = useState('All Years');
+  const complianceRef = useRef<HTMLDivElement>(null);
+  const animatedRef = useRef(false);
+  
+  const years = ['All Years', '2026', '2025', '2024', '2023'];
+  
+  const documents = [
+    { icon: '📊', name: 'Annual Budget 2026', sub: 'Approved Municipal Budget · FY 2026', year: '2026' },
+    { icon: '📊', name: 'Annual Budget 2025', sub: 'Approved Municipal Budget · FY 2025', year: '2025' },
+    { icon: '💰', name: 'Statement of Receipts & Expenditures', sub: 'Financial performance for FY 2025', year: '2025' },
+    { icon: '📋', name: 'COA Annual Audit Report', sub: 'Commission on Audit findings · 2024', year: '2024' },
+    { icon: '⚖️', name: 'Ordinance No. 2026-003 — Waste Management', sub: 'Enacted February 28, 2026', year: '2026' },
+    { icon: '⚖️', name: 'Ordinance No. 2025-001 — Revenue Code Amendment', sub: 'Enacted January 10, 2025', year: '2025' },
+    { icon: '📌', name: 'FOI Manual — Freedom of Information Policy', sub: 'EO 2 s.2016 Compliance Document', year: '2023' },
+  ];
+  
+  useEffect(() => {
+    if (isActive && complianceRef.current && !animatedRef.current) {
+      animatedRef.current = true;
+      const target = 100;
+      const dur = 1400;
+      const start = performance.now();
+      
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / dur, 1);
+        const e = 1 - Math.pow(1 - p, 3);
+        if (complianceRef.current) {
+          complianceRef.current.textContent = Math.floor(e * target).toString();
+        }
+        if (p < 1) {
+          requestAnimationFrame(tick);
+        } else if (complianceRef.current) {
+          complianceRef.current.textContent = target.toString();
+        }
+      };
+      
+      requestAnimationFrame(tick);
+    }
+  }, [isActive]);
+
+  return (
+    <div className={`panel ${isActive ? 'active' : ''}`}>
+      <div className="p-inner">
+        <div className="p-header">
+          <div className="p-eyebrow">Open Government · NBC 542</div>
+          <div className="p-title">Transparency <em>Portal</em></div>
+        </div>
+        
+        <div className="year-filter">
+          {years.map((year) => (
+            <button 
+              key={year} 
+              className={`yr-btn ${activeYear === year ? 'active' : ''}`}
+              onClick={() => setActiveYear(year)}
+            >
+              {year}
+            </button>
+          ))}
+        </div>
+        
+        <div className="trans-layout">
+          <div className="trans-doc-list">
+            {documents.map((doc, index) => (
+              <div key={index} className="trans-doc">
+                <span className="trans-doc-icon">{doc.icon}</span>
+                <div>
+                  <div className="trans-doc-name">{doc.name}</div>
+                  <div className="trans-doc-sub">{doc.sub}</div>
+                </div>
+                <span className="trans-doc-year">{doc.year}</span>
+                <span className="trans-doc-dl">↓ Download PDF</span>
+              </div>
+            ))}
+          </div>
+          
+          <div className="trans-side">
+            <div className="compliance-card">
+              <div ref={complianceRef} className="compliance-num">0</div>
+              <div className="compliance-label">% NBC 542 Compliance</div>
+              <div className="compliance-quote">
+                &quot;A government that is transparent is a government that the people can trust.&quot;
+              </div>
+            </div>
+            
+            <div className="nbc-badge">
+              <strong>NBC 542 Compliant</strong> — All required transparency documents are published in compliance with National Budget Circular 542 requirements for LGUs.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

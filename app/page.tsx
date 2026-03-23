@@ -1,101 +1,110 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { NavPage, NavConfig } from '@/lib/types';
+import Preloader from '@/components/Preloader';
+import CustomCursor from '@/components/CustomCursor';
+import Ambient from '@/components/Ambient';
+import Rail from '@/components/Rail';
+import Topbar from '@/components/Topbar';
+import Toast from '@/components/Toast';
+import HomePanel from '@/components/panels/HomePanel';
+import ProfilePanel from '@/components/panels/ProfilePanel';
+import NewsPanel from '@/components/panels/NewsPanel';
+import ServicesPanel from '@/components/panels/ServicesPanel';
+import TransparencyPanel from '@/components/panels/TransparencyPanel';
+import TourismPanel from '@/components/panels/TourismPanel';
+import ContactPanel from '@/components/panels/ContactPanel';
+
+const navConfig: Record<NavPage, NavConfig> = {
+  home: { title: 'Municipality of Conner', sub: 'Official Website', tabs: [] },
+  profile: { title: 'Municipal Profile', sub: 'Conner, Apayao', tabs: ['Overview', 'Officials', 'Barangays'] },
+  news: { title: 'News & Announcements', sub: 'Latest Updates', tabs: ['All', 'News', 'Announcements', 'Events'] },
+  services: { title: 'Online Services', sub: 'Government Services', tabs: ['All Services', 'Forms', 'Guides'] },
+  transparency: { title: 'Transparency Portal', sub: 'NBC 542 Compliant', tabs: ['All Documents', 'Budget', 'Ordinances', 'FOI'] },
+  tourism: { title: 'Tourism', sub: 'Discover Conner', tabs: ['Destinations', 'Culture', 'Contact'] },
+  contact: { title: 'Contact & Feedback', sub: 'Get In Touch', tabs: [] },
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState<NavPage>('home');
+  const [time, setTime] = useState('--:--:--');
+  const [showToast, setShowToast] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Clock ticker
+  useEffect(() => {
+    const tick = () => {
+      const t = new Date().toLocaleTimeString('en-PH', {
+        timeZone: 'Asia/Manila',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+      });
+      setTime(t);
+    };
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Preloader dismiss
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleNavigate = useCallback((page: NavPage) => {
+    if (currentPage !== page) {
+      setCurrentPage(page);
+    }
+  }, [currentPage]);
+
+  const handleSendMessage = useCallback(() => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 4000);
+  }, []);
+
+  return (
+    <>
+      <Preloader isVisible={isLoading} />
+      <CustomCursor />
+      <Ambient />
+      
+      <Rail 
+        currentPage={currentPage} 
+        onNavigate={handleNavigate} 
+        time={time} 
+      />
+      
+      <div className="main">
+        <Topbar 
+          currentPage={currentPage} 
+          navConfig={navConfig} 
+          time={time} 
+        />
+        
+        <div className="content">
+          <HomePanel 
+            isActive={currentPage === 'home'} 
+            onNavigate={handleNavigate} 
+          />
+          <ProfilePanel isActive={currentPage === 'profile'} />
+          <NewsPanel isActive={currentPage === 'news'} />
+          <ServicesPanel isActive={currentPage === 'services'} />
+          <TransparencyPanel isActive={currentPage === 'transparency'} />
+          <TourismPanel isActive={currentPage === 'tourism'} />
+          <ContactPanel 
+            isActive={currentPage === 'contact'} 
+            onSendMessage={handleSendMessage} 
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+      
+      <Toast isVisible={showToast} />
+    </>
   );
 }
