@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum PostCategory {
+  NEWS
+  ANNOUNCEMENT
+}
+
+enum OfficialType {
+  ELECTED
+  APPOINTED
+}
+
+enum DocumentType {
+  ORDINANCE
+  TRANSPARENCY
+  OTHER
+}
+
+enum FeedbackStatus {
+  NEW
+  REVIEWED
+  RESOLVED
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  avatarUrl String?
+  bio       String?
+  role      UserRole  @default(USER)
+  posts     Post[]    @relation("authorPosts")
+  admin     AdminAccount?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model AdminAccount {
+  id           String   @id @default(uuid())
+  user         User?    @relation(fields: [userId], references: [id])
+  userId       String?  @unique
+  username     String   @unique
+  passwordHash String
+  isSuper      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Post {
+  id          String       @id @default(uuid())
+  title       String
+  slug        String       @unique
+  content     String
+  excerpt     String?
+  category    PostCategory @default(NEWS)
+  published   Boolean      @default(false)
+  publishedAt DateTime?
+  author      User?        @relation("authorPosts", fields: [authorId], references: [id])
+  authorId    String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  @@index([published, publishedAt])
+}
+
+model Official {
+  id           String    @id @default(uuid())
+  name         String
+  position     String
+  type         OfficialType
+  photoUrl     String?
+  party        String?
+  contactEmail String?
+  contactPhone String?
+  termStart    DateTime?
+  termEnd      DateTime?
+  bio          String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Form {
+  id         String   @id @default(uuid())
+  title      String
+  description String?
+  fileName   String
+  fileUrl    String
+  mime       String?
+  size       Int?
+  version    String?
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Document {
+  id              String       @id @default(uuid())
+  title           String
+  description     String?
+  documentType    DocumentType @default(OTHER)
+  fileName        String
+  fileUrl         String
+  referenceNumber String?
+  effectiveDate   DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  @@index([documentType, referenceNumber])
+}
+
+model Feedback {
+  id         String         @id @default(uuid())
+  name       String
+  email      String
+  subject    String?
+  message    String
+  ip         String?
+  status     FeedbackStatus @default(NEW)
+  receivedAt DateTime       @default(now())
+  resolvedAt DateTime?
+}
