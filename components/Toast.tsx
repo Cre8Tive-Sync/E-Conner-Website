@@ -1,5 +1,7 @@
 'use client';
 
+import { CheckCircle } from 'lucide-react';
+
 interface ToastProps {
   isVisible: boolean;
 }
@@ -7,7 +9,7 @@ interface ToastProps {
 export default function Toast({ isVisible }: ToastProps) {
   return (
     <div className={`toast ${isVisible ? 'show' : ''}`}>
-      <span style={{ fontSize: '18px' }}>✓</span>
+      <CheckCircle size={18} />
       <span className="toast-text">Message sent! We&apos;ll get back to you within 3 business days.</span>
     </div>
   );

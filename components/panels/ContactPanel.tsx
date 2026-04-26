@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 interface ContactPanelProps {
   isActive: boolean;
@@ -140,7 +141,7 @@ export default function ContactPanel({ isActive, onSendMessage }: ContactPanelPr
 
           <div className="contact-info-wrap">
             <div className="contact-tile">
-              <span className="ct-icon">📍</span>
+              <span className="ct-icon"><MapPin size={20} /></span>
               <div>
                 <div className="ct-label">Address</div>
                 <div className="ct-value">Municipal Hall, Caglayan<br />Conner, Apayao, Philippines</div>
@@ -148,7 +149,7 @@ export default function ContactPanel({ isActive, onSendMessage }: ContactPanelPr
             </div>
 
             <div className="contact-tile">
-              <span className="ct-icon">📞</span>
+              <span className="ct-icon"><Phone size={20} /></span>
               <div>
                 <div className="ct-label">Tourism Office</div>
                 <div className="ct-value">+63 960 429 4262</div>
@@ -156,7 +157,7 @@ export default function ContactPanel({ isActive, onSendMessage }: ContactPanelPr
             </div>
 
             <div className="contact-tile">
-              <span className="ct-icon">✉️</span>
+              <span className="ct-icon"><Mail size={20} /></span>
               <div>
                 <div className="ct-label">Tourism Email</div>
                 <div className="ct-value">connerapayaotourism@gmail.com</div>
@@ -164,7 +165,7 @@ export default function ContactPanel({ isActive, onSendMessage }: ContactPanelPr
             </div>
 
             <div className="contact-tile">
-              <span className="ct-icon">🕐</span>
+              <span className="ct-icon"><Clock size={20} /></span>
               <div>
                 <div className="ct-label">Office Hours</div>
                 <div className="ct-value">Monday – Friday<br />8:00 AM – 5:00 PM</div>
@@ -172,7 +173,7 @@ export default function ContactPanel({ isActive, onSendMessage }: ContactPanelPr
             </div>
 
             <div className="map-block">
-              <div className="map-pin">📍</div>
+              <div className="map-pin"><MapPin size={24} /></div>
               <div className="map-label">Conner, Apayao · CAR, Philippines</div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { DynamicIcon } from '@/lib/icons';
 
 interface TransparencyPanelProps {
   isActive: boolean;
@@ -79,7 +80,7 @@ export default function TransparencyPanel({ isActive }: TransparencyPanelProps) 
           <div className="trans-doc-list">
             {documents.map((doc) => (
               <div key={doc.id} className="trans-doc">
-                <span className="trans-doc-icon">{doc.icon}</span>
+                <span className="trans-doc-icon"><DynamicIcon name={doc.icon} size={18} /></span>
                 <div>
                   <div className="trans-doc-name">{doc.name}</div>
                   <div className="trans-doc-sub">{doc.description}</div>

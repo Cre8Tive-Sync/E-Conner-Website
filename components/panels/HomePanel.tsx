@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { ClipboardList, Eye, Landmark, Leaf, Mail, type LucideIcon } from 'lucide-react';
+import { DynamicIcon } from '@/lib/icons';
 import { NavPage } from '@/lib/types';
 
 interface HomePanelProps {
@@ -70,12 +72,12 @@ function StatTile({ count, label, isActive }: StatTileProps) {
   );
 }
 
-const quickItems = [
-  { icon: '📋', name: 'Downloadable Forms', sub: 'Permits, clearances & registrations', page: 'services' as NavPage },
-  { icon: '🔍', name: 'Transparency Portal', sub: 'Budgets, ordinances, COA reports', page: 'transparency' as NavPage },
-  { icon: '🏛', name: 'Municipal Officials', sub: 'Mayor, Vice Mayor, Councilors', page: 'profile' as NavPage },
-  { icon: '🌿', name: 'Tourism', sub: 'Destinations & Isnag heritage', page: 'tourism' as NavPage },
-  { icon: '✉️', name: 'Contact & Feedback', sub: 'Send us your concerns', page: 'contact' as NavPage },
+const quickItems: { icon: LucideIcon; name: string; sub: string; page: NavPage }[] = [
+  { icon: ClipboardList, name: 'Downloadable Forms', sub: 'Permits, clearances & registrations', page: 'services' },
+  { icon: Eye, name: 'Transparency Portal', sub: 'Budgets, ordinances, COA reports', page: 'transparency' },
+  { icon: Landmark, name: 'Municipal Officials', sub: 'Mayor, Vice Mayor, Councilors', page: 'profile' },
+  { icon: Leaf, name: 'Tourism', sub: 'Destinations & Isnag heritage', page: 'tourism' },
+  { icon: Mail, name: 'Contact & Feedback', sub: 'Send us your concerns', page: 'contact' },
 ];
 
 export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
@@ -138,7 +140,9 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
             </div>
             {newsItems.map((item, index) => (
               <div key={item.id} className="news-item">
-                <div className={`news-item-thumb ${THUMB_CLASSES[index % THUMB_CLASSES.length]}`}>{item.icon}</div>
+                <div className={`news-item-thumb ${THUMB_CLASSES[index % THUMB_CLASSES.length]}`}>
+                  <DynamicIcon name={item.icon} size={22} />
+                </div>
                 <div>
                   <div className="news-item-tag">{item.tag}</div>
                   <div className="news-item-title">{item.title}</div>
@@ -149,16 +153,19 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
           </div>
 
           <div className="home-quick">
-            {quickItems.map((item, index) => (
-              <div key={index} className="quick-item" onClick={() => onNavigate(item.page)}>
-                <span className="quick-icon">{item.icon}</span>
-                <div>
-                  <div className="quick-name">{item.name}</div>
-                  <div className="quick-sub">{item.sub}</div>
+            {quickItems.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div key={index} className="quick-item" onClick={() => onNavigate(item.page)}>
+                  <span className="quick-icon"><Icon size={18} /></span>
+                  <div>
+                    <div className="quick-name">{item.name}</div>
+                    <div className="quick-sub">{item.sub}</div>
+                  </div>
+                  <span className="quick-arrow">→</span>
                 </div>
-                <span className="quick-arrow">→</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

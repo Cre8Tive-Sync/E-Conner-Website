@@ -1,6 +1,9 @@
 import { PrismaClient } from '../lib/generated/prisma/client.ts';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import path from 'path';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaBetterSqlite3({ url: path.resolve(process.cwd(), 'prisma/dev.db') });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // Clear existing data
@@ -29,7 +32,7 @@ async function main() {
         excerpt: 'The municipality of Conner is pleased to announce that the full budget transparency report for fiscal year 2025 is now available for public viewing.',
         content: 'The municipality of Conner is pleased to announce that the full budget transparency report for fiscal year 2025 is now available for public viewing. Citizens may access the document through the Transparency Portal or visit the Municipal Hall during office hours.',
         tag: 'Announcement',
-        icon: '📊',
+        icon: 'BarChart2',
         isFeatured: true,
         publishedAt: new Date('2026-03-15'),
       },
@@ -38,7 +41,7 @@ async function main() {
         excerpt: 'The municipality formally joins the Apayao Biosphere Reserve initiative, reinforcing its commitment to environmental conservation.',
         content: 'The municipality formally joins the Apayao Biosphere Reserve initiative, reinforcing its commitment to environmental conservation and sustainable tourism development.',
         tag: 'Tourism',
-        icon: '🌿',
+        icon: 'Leaf',
         isFeatured: false,
         publishedAt: new Date('2026-03-10'),
       },
@@ -47,7 +50,7 @@ async function main() {
         excerpt: 'Citizens can now download and submit business permit application forms through the municipal website.',
         content: 'Citizens can now download and submit business permit application forms through the municipal website. The new online system reduces processing time and allows applicants to track their application status.',
         tag: 'Services',
-        icon: '📋',
+        icon: 'ClipboardList',
         isFeatured: false,
         publishedAt: new Date('2026-03-05'),
       },
@@ -56,7 +59,7 @@ async function main() {
         excerpt: 'The Sangguniang Bayan has enacted a new ordinance on solid waste management for all barangays.',
         content: 'The Sangguniang Bayan has enacted Ordinance No. 2026-003, establishing comprehensive waste management policies for all 21 barangays in the municipality.',
         tag: 'Ordinance',
-        icon: '⚖️',
+        icon: 'Scale',
         isFeatured: false,
         publishedAt: new Date('2026-02-28'),
       },
@@ -65,7 +68,7 @@ async function main() {
         excerpt: 'The Apayao General Hospital has been officially renamed and will undergo major expansion to serve more residents.',
         content: 'The Apayao General Hospital has been officially renamed and will undergo major expansion to better serve the growing population of Apayao province, including Conner residents.',
         tag: 'News',
-        icon: '🏥',
+        icon: 'Hospital',
         isFeatured: false,
         publishedAt: new Date('2026-02-20'),
       },
@@ -78,19 +81,19 @@ async function main() {
       {
         name: 'Apayao-Abulug River',
         description: 'A majestic river flowing through Conner, part of the UNESCO-listed Apayao Biosphere Reserve.',
-        icon: '🏔️',
+        icon: 'Mountain',
         order: 0,
       },
       {
         name: 'Natural Springs',
         description: 'Cool, clear springs nestled in the mountains of Conner, accessible via scenic forest trails.',
-        icon: '💧',
+        icon: 'Droplets',
         order: 1,
       },
       {
         name: 'Dipterocarp Forest',
         description: 'Home to lawaan trees, Rafflesia flowers, and critically endangered wildlife of the Cordillera.',
-        icon: '🌳',
+        icon: 'TreePine',
         order: 2,
       },
     ],
@@ -99,13 +102,13 @@ async function main() {
   // Transparency documents
   await prisma.transparencyDocument.createMany({
     data: [
-      { name: 'Annual Budget 2026', description: 'Approved Municipal Budget · FY 2026', icon: '📊', year: '2026' },
-      { name: 'Annual Budget 2025', description: 'Approved Municipal Budget · FY 2025', icon: '📊', year: '2025' },
-      { name: 'Statement of Receipts & Expenditures', description: 'Financial performance for FY 2025', icon: '💰', year: '2025' },
-      { name: 'COA Annual Audit Report', description: 'Commission on Audit findings · 2024', icon: '📋', year: '2024' },
-      { name: 'Ordinance No. 2026-003 — Waste Management', description: 'Enacted February 28, 2026', icon: '⚖️', year: '2026' },
-      { name: 'Ordinance No. 2025-001 — Revenue Code Amendment', description: 'Enacted January 10, 2025', icon: '⚖️', year: '2025' },
-      { name: 'FOI Manual — Freedom of Information Policy', description: 'EO 2 s.2016 Compliance Document', icon: '📌', year: '2023' },
+      { name: 'Annual Budget 2026', description: 'Approved Municipal Budget · FY 2026', icon: 'BarChart2', year: '2026' },
+      { name: 'Annual Budget 2025', description: 'Approved Municipal Budget · FY 2025', icon: 'BarChart2', year: '2025' },
+      { name: 'Statement of Receipts & Expenditures', description: 'Financial performance for FY 2025', icon: 'Coins', year: '2025' },
+      { name: 'COA Annual Audit Report', description: 'Commission on Audit findings · 2024', icon: 'ClipboardList', year: '2024' },
+      { name: 'Ordinance No. 2026-003 — Waste Management', description: 'Enacted February 28, 2026', icon: 'Scale', year: '2026' },
+      { name: 'Ordinance No. 2025-001 — Revenue Code Amendment', description: 'Enacted January 10, 2025', icon: 'Scale', year: '2025' },
+      { name: 'FOI Manual — Freedom of Information Policy', description: 'EO 2 s.2016 Compliance Document', icon: 'Pin', year: '2023' },
     ],
   });
 

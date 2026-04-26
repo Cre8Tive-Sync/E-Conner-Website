@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Phone, Mail, Globe } from 'lucide-react';
+import { DynamicIcon } from '@/lib/icons';
 
 interface TourismPanelProps {
   isActive: boolean;
@@ -38,7 +40,9 @@ export default function TourismPanel({ isActive }: TourismPanelProps) {
         <div className="tourism-spots-grid">
           {spots.map((spot, index) => (
             <div key={spot.id} className="spot-card">
-              <div className={`spot-img ${IMG_CLASSES[index % IMG_CLASSES.length]}`}>{spot.icon}</div>
+              <div className={`spot-img ${IMG_CLASSES[index % IMG_CLASSES.length]}`}>
+                <DynamicIcon name={spot.icon} size={28} />
+              </div>
               <div className="spot-body">
                 <div className="spot-name">{spot.name}</div>
                 <div className="spot-desc">{spot.description}</div>
@@ -65,14 +69,14 @@ export default function TourismPanel({ isActive }: TourismPanelProps) {
               Our tourism office is ready to assist visitors in exploring the best of Conner.
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: '10px' }}>
-                <span>📞</span><span>+63 960 429 4262</span>
+              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <Phone size={14} /><span>+63 960 429 4262</span>
               </div>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: '10px' }}>
-                <span>✉️</span><span>connerapayaotourism@gmail.com</span>
+              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <Mail size={14} /><span>connerapayaotourism@gmail.com</span>
               </div>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: '10px' }}>
-                <span>📘</span><span>@tourismofconner</span>
+              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <Globe size={14} /><span>@tourismofconner</span>
               </div>
             </div>
           </div>

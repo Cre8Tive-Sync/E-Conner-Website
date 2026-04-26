@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { User } from 'lucide-react';
 
 interface ProfilePanelProps {
   isActive: boolean;
@@ -63,7 +64,7 @@ export default function ProfilePanel({ isActive }: ProfilePanelProps) {
             <div className="officials-grid">
               {officials.map((official) => (
                 <div key={official.id} className="official-card">
-                  <div className="official-avatar">👤</div>
+                  <div className="official-avatar"><User size={28} /></div>
                   <div className="official-name">{official.name}</div>
                   <div className="official-pos">{official.position}</div>
                   {official.badge && <div className="vm-badge">{official.badge}</div>}

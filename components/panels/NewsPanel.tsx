@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { DynamicIcon } from '@/lib/icons';
 
 interface NewsPanelProps {
   isActive: boolean;
@@ -73,7 +74,7 @@ export default function NewsPanel({ isActive }: NewsPanelProps) {
           <div className="news-panel-grid">
             {featured && (
               <div className="news-big-card">
-                <div className="news-big-img">{featured.icon}</div>
+                <div className="news-big-img"><DynamicIcon name={featured.icon} size={36} /></div>
                 <div className="news-big-body">
                   <span style={{ fontSize: '10px', color: 'var(--bright)', letterSpacing: '.1em', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
                     {featured.tag}
@@ -94,7 +95,9 @@ export default function NewsPanel({ isActive }: NewsPanelProps) {
             <div className="news-small-list">
               {secondary.map((item) => (
                 <div key={item.id} className="news-small-card">
-                  <div className={`nsc-icon ${TAG_ICON_CLASS[item.tag] ?? 'ni-a'}`}>{item.icon}</div>
+                  <div className={`nsc-icon ${TAG_ICON_CLASS[item.tag] ?? 'ni-a'}`}>
+                    <DynamicIcon name={item.icon} size={18} />
+                  </div>
                   <div>
                     <div className="nsc-title">{item.title}</div>
                     <div className="nsc-meta">
