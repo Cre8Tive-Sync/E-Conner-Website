@@ -29,6 +29,34 @@ interface Announcement {
   text: string;
 }
 
+interface WeatherData {
+  temp: number;
+  code: number;
+  wind: number;
+  humidity: number;
+}
+
+function weatherLabel(code: number) {
+  if (code === 0) return 'Clear Sky';
+  if (code <= 3) return 'Partly Cloudy';
+  if (code <= 48) return 'Foggy';
+  if (code <= 55) return 'Drizzle';
+  if (code <= 67) return 'Rainy';
+  if (code <= 77) return 'Snow';
+  if (code <= 82) return 'Rain Showers';
+  return 'Thunderstorm';
+}
+
+function weatherEmoji(code: number) {
+  if (code === 0) return '☀️';
+  if (code <= 3) return '⛅';
+  if (code <= 48) return '🌫️';
+  if (code <= 67) return '🌧️';
+  if (code <= 77) return '❄️';
+  if (code <= 82) return '🌦️';
+  return '⛈️';
+}
+
 const THUMB_CLASSES = ['nt-1', 'nt-2', 'nt-3', 'nt-4'];
 
 function formatDate(iso: string) {
@@ -88,6 +116,25 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
     'Downloadable government forms now available online',
     'For inquiries contact the Municipal Hall · Caglayan, Conner, Apayao',
   ]);
+  const [now, setNow] = useState(() => new Date());
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=18.0672&longitude=121.3494&current=temperature_2m,weathercode,windspeed_10m,relativehumidity_2m&timezone=Asia%2FManila')
+      .then((r) => r.json())
+      .then((d) => setWeather({
+        temp: Math.round(d.current.temperature_2m),
+        code: d.current.weathercode,
+        wind: Math.round(d.current.windspeed_10m),
+        humidity: d.current.relativehumidity_2m,
+      }))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     fetch('/api/news')
@@ -126,7 +173,41 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
           <div className="home-hero-side">
             <StatTile count={28360} label="Population (2024)" isActive={isActive} />
             <StatTile count={21} label="Barangays" isActive={isActive} />
-            <StatTile count={694} label="km² Land Area" isActive={isActive} />
+          </div>
+        </div>
+
+        <div className="home-map">
+          <div className="home-map-widget">
+            <div className="hmw-time">
+              {now.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Manila' })}
+            </div>
+            <div className="hmw-date">
+              {now.toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'Asia/Manila' })}
+            </div>
+            <div className="hmw-divider" />
+            {weather ? (
+              <>
+                <div className="hmw-weather-row">
+                  <span className="hmw-icon">{weatherEmoji(weather.code)}</span>
+                  <span className="hmw-temp">{weather.temp}°C</span>
+                </div>
+                <div className="hmw-condition">{weatherLabel(weather.code)}</div>
+                <div className="hmw-meta">
+                  <span>💨 {weather.wind} km/h</span>
+                  <span>💧 {weather.humidity}%</span>
+                </div>
+              </>
+            ) : (
+              <div className="hmw-loading">Fetching weather…</div>
+            )}
+            <div className="hmw-footer">Conner, Apayao · PHT</div>
+          </div>
+          <div className="home-map-frame-wrap">
+            <iframe
+              className="home-map-frame"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=121.0%2C17.7%2C121.7%2C18.4&layer=mapnik&marker=18.0672%2C121.3494"
+              title="Municipality of Conner, Apayao"
+            />
           </div>
         </div>
 
