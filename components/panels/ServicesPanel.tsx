@@ -1,27 +1,36 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
 interface ServicesPanelProps {
   isActive: boolean;
 }
 
-export default function ServicesPanel({ isActive }: ServicesPanelProps) {
-  const services = [
-    { icon: '📋', name: 'Downloadable Forms', desc: 'Access official government forms for permits, clearances, and registrations from any device.' },
-    { icon: '🏢', name: 'Business Permits', desc: 'Requirements, fees, and step-by-step guide for obtaining or renewing your business permit.' },
-    { icon: '📜', name: 'Civil Registry', desc: 'Birth certificates, marriage licenses, death certificates and civil registration documents.' },
-    { icon: '🏠', name: 'Barangay Services', desc: 'Barangay clearance, indigency certificates, and community-level service requests.' },
-    { icon: '🌱', name: 'Agriculture Office', desc: 'Farming assistance, crop insurance, and agricultural support programs for Conner farmers.' },
-    { icon: '🛠️', name: 'Engineering Office', desc: 'Building permits, infrastructure requests, and engineering certifications.' },
-  ];
+interface ServiceForm {
+  id: number;
+  name: string;
+  office: string;
+  fileUrl: string;
+}
 
-  const forms = [
-    { name: 'Business Permit Application', office: "Mayor's Office" },
-    { name: 'Barangay Clearance Request', office: 'Barangay Affairs' },
-    { name: 'Indigency Certificate', office: 'Social Welfare Office' },
-    { name: 'Building Permit Application', office: 'Municipal Engineer' },
-    { name: 'Local Employment Form', office: 'PESO Office' },
-    { name: 'FOI Request Form', office: "Mayor's Office" },
-  ];
+const services = [
+  { icon: '📋', name: 'Downloadable Forms', desc: 'Access official government forms for permits, clearances, and registrations from any device.' },
+  { icon: '🏢', name: 'Business Permits', desc: 'Requirements, fees, and step-by-step guide for obtaining or renewing your business permit.' },
+  { icon: '📜', name: 'Civil Registry', desc: 'Birth certificates, marriage licenses, death certificates and civil registration documents.' },
+  { icon: '🏠', name: 'Barangay Services', desc: 'Barangay clearance, indigency certificates, and community-level service requests.' },
+  { icon: '🌱', name: 'Agriculture Office', desc: 'Farming assistance, crop insurance, and agricultural support programs for Conner farmers.' },
+  { icon: '🛠️', name: 'Engineering Office', desc: 'Building permits, infrastructure requests, and engineering certifications.' },
+];
+
+export default function ServicesPanel({ isActive }: ServicesPanelProps) {
+  const [forms, setForms] = useState<ServiceForm[]>([]);
+
+  useEffect(() => {
+    fetch('/api/forms')
+      .then((r) => r.json())
+      .then(setForms)
+      .catch(() => {});
+  }, []);
 
   return (
     <div className={`panel ${isActive ? 'active' : ''}`}>
@@ -30,7 +39,7 @@ export default function ServicesPanel({ isActive }: ServicesPanelProps) {
           <div className="p-eyebrow">Government Services</div>
           <div className="p-title">Online <em>Services</em></div>
         </div>
-        
+
         <div className="services-grid-panel">
           {services.map((service, index) => (
             <div key={index} className="svc-card">
@@ -41,18 +50,22 @@ export default function ServicesPanel({ isActive }: ServicesPanelProps) {
             </div>
           ))}
         </div>
-        
+
         <div className="p-eyebrow" style={{ marginBottom: '14px' }}>Frequently Downloaded</div>
-        
+
         <div className="forms-grid">
-          {forms.map((form, index) => (
-            <div key={index} className="form-item">
+          {forms.map((form) => (
+            <div key={form.id} className="form-item">
               <span style={{ fontSize: '18px' }}>📄</span>
               <div>
                 <div className="form-name">{form.name}</div>
                 <div className="form-office">{form.office}</div>
               </div>
-              <span className="form-dl">↓ PDF</span>
+              {form.fileUrl ? (
+                <a href={form.fileUrl} className="form-dl" download>↓ PDF</a>
+              ) : (
+                <span className="form-dl" style={{ opacity: 0.35, cursor: 'default' }}>↓ PDF</span>
+              )}
             </div>
           ))}
         </div>

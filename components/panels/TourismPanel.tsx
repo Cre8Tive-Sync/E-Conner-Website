@@ -1,15 +1,29 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+
 interface TourismPanelProps {
   isActive: boolean;
 }
 
+interface TourismSpot {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+const IMG_CLASSES = ['sp-1', 'sp-2', 'sp-3', 'sp-4'];
+
 export default function TourismPanel({ isActive }: TourismPanelProps) {
-  const spots = [
-    { icon: '🏔️', name: 'Apayao-Abulug River', desc: 'A majestic river flowing through Conner, part of the UNESCO-listed Apayao Biosphere Reserve.', imgClass: 'sp-1' },
-    { icon: '💧', name: 'Natural Springs', desc: 'Cool, clear springs nestled in the mountains of Conner, accessible via scenic forest trails.', imgClass: 'sp-2' },
-    { icon: '🌳', name: 'Dipterocarp Forest', desc: 'Home to lawaan trees, Rafflesia flowers, and critically endangered wildlife of the Cordillera.', imgClass: 'sp-3' },
-  ];
+  const [spots, setSpots] = useState<TourismSpot[]>([]);
+
+  useEffect(() => {
+    fetch('/api/tourism')
+      .then((r) => r.json())
+      .then(setSpots)
+      .catch(() => {});
+  }, []);
 
   return (
     <div className={`panel ${isActive ? 'active' : ''}`}>
@@ -20,30 +34,30 @@ export default function TourismPanel({ isActive }: TourismPanelProps) {
             <div className="tourism-banner-sub">Nature · Culture · Heritage</div>
           </div>
         </div>
-        
+
         <div className="tourism-spots-grid">
           {spots.map((spot, index) => (
-            <div key={index} className="spot-card">
-              <div className={`spot-img ${spot.imgClass}`}>{spot.icon}</div>
+            <div key={spot.id} className="spot-card">
+              <div className={`spot-img ${IMG_CLASSES[index % IMG_CLASSES.length]}`}>{spot.icon}</div>
               <div className="spot-body">
                 <div className="spot-name">{spot.name}</div>
-                <div className="spot-desc">{spot.desc}</div>
+                <div className="spot-desc">{spot.description}</div>
               </div>
             </div>
           ))}
         </div>
-        
+
         <div className="isnag-section">
           <div className="culture-card">
             <div className="culture-card-label">Indigenous Heritage</div>
             <div className="culture-card-title">The Isnag People</div>
             <div className="culture-card-body">
-              The Isnag are the indigenous people of Apayao. In Conner, the Nabwangan dialect is spoken. 
-              Their rich oral traditions, weaving arts, and ancestral practices are preserved across the 
+              The Isnag are the indigenous people of Apayao. In Conner, the Nabwangan dialect is spoken.
+              Their rich oral traditions, weaving arts, and ancestral practices are preserved across the
               municipality&apos;s upland communities.
             </div>
           </div>
-          
+
           <div className="culture-card">
             <div className="culture-card-label">Tourism Contact</div>
             <div className="culture-card-title">Plan Your Visit</div>

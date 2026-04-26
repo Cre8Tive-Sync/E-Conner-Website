@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavPage } from '@/lib/types';
 
 interface HomePanelProps {
@@ -14,17 +14,36 @@ interface StatTileProps {
   isActive: boolean;
 }
 
+interface NewsItem {
+  id: number;
+  title: string;
+  tag: string;
+  icon: string;
+  publishedAt: string;
+}
+
+interface Announcement {
+  id: number;
+  text: string;
+}
+
+const THUMB_CLASSES = ['nt-1', 'nt-2', 'nt-3', 'nt-4'];
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
 function StatTile({ count, label, isActive }: StatTileProps) {
   const numRef = useRef<HTMLDivElement>(null);
   const animatedRef = useRef(false);
-  
+
   useEffect(() => {
     if (isActive && numRef.current && !animatedRef.current) {
       animatedRef.current = true;
       const target = count;
       const dur = 1400;
       const start = performance.now();
-      
+
       const tick = (now: number) => {
         const p = Math.min((now - start) / dur, 1);
         const e = 1 - Math.pow(1 - p, 3);
@@ -37,11 +56,11 @@ function StatTile({ count, label, isActive }: StatTileProps) {
           numRef.current.textContent = target.toLocaleString();
         }
       };
-      
+
       requestAnimationFrame(tick);
     }
   }, [isActive, count]);
-  
+
   return (
     <div className="stat-tile">
       <div className="stat-tile-accent"></div>
@@ -51,28 +70,36 @@ function StatTile({ count, label, isActive }: StatTileProps) {
   );
 }
 
+const quickItems = [
+  { icon: '📋', name: 'Downloadable Forms', sub: 'Permits, clearances & registrations', page: 'services' as NavPage },
+  { icon: '🔍', name: 'Transparency Portal', sub: 'Budgets, ordinances, COA reports', page: 'transparency' as NavPage },
+  { icon: '🏛', name: 'Municipal Officials', sub: 'Mayor, Vice Mayor, Councilors', page: 'profile' as NavPage },
+  { icon: '🌿', name: 'Tourism', sub: 'Destinations & Isnag heritage', page: 'tourism' as NavPage },
+  { icon: '✉️', name: 'Contact & Feedback', sub: 'Send us your concerns', page: 'contact' as NavPage },
+];
+
 export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
-  const marqueeItems = [
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [marqueeItems, setMarqueeItems] = useState<string[]>([
     'Welcome to the official website of the Municipality of Conner, Apayao',
     'Home of the Isnag people · Cordillera Administrative Region',
     'Downloadable government forms now available online',
     'For inquiries contact the Municipal Hall · Caglayan, Conner, Apayao',
-  ];
+  ]);
 
-  const newsItems = [
-    { icon: '📊', tag: 'Announcement', title: 'Municipal Budget Transparency Report Now Available for Public Review', date: 'March 15, 2026', thumbClass: 'nt-1' },
-    { icon: '🌿', tag: 'Tourism', title: 'Conner Joins Apayao Biosphere Reserve Initiative', date: 'March 10, 2026', thumbClass: 'nt-2' },
-    { icon: '📋', tag: 'Services', title: 'New Business Permit Forms Now Available Online', date: 'March 5, 2026', thumbClass: 'nt-3' },
-    { icon: '⚖️', tag: 'Ordinance', title: 'SB Enacts Ordinance No. 2026-003 on Waste Management', date: 'Feb 28, 2026', thumbClass: 'nt-4' },
-  ];
+  useEffect(() => {
+    fetch('/api/news')
+      .then((r) => r.json())
+      .then((data: NewsItem[]) => setNewsItems(data.slice(0, 4)))
+      .catch(() => {});
 
-  const quickItems = [
-    { icon: '📋', name: 'Downloadable Forms', sub: 'Permits, clearances & registrations', page: 'services' as NavPage },
-    { icon: '🔍', name: 'Transparency Portal', sub: 'Budgets, ordinances, COA reports', page: 'transparency' as NavPage },
-    { icon: '🏛', name: 'Municipal Officials', sub: 'Mayor, Vice Mayor, Councilors', page: 'profile' as NavPage },
-    { icon: '🌿', name: 'Tourism', sub: 'Destinations & Isnag heritage', page: 'tourism' as NavPage },
-    { icon: '✉️', name: 'Contact & Feedback', sub: 'Send us your concerns', page: 'contact' as NavPage },
-  ];
+    fetch('/api/announcements')
+      .then((r) => r.json())
+      .then((data: Announcement[]) => {
+        if (data.length > 0) setMarqueeItems(data.map((a) => a.text));
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className={`panel ${isActive ? 'active' : ''}`}>
@@ -87,7 +114,7 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
             ))}
           </div>
         </div>
-        
+
         <div className="home-hero">
           <div className="home-hero-main">
             <div className="home-hero-eyebrow">Province of Apayao · CAR</div>
@@ -100,7 +127,7 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
             <StatTile count={694} label="km² Land Area" isActive={isActive} />
           </div>
         </div>
-        
+
         <div className="home-grid">
           <div>
             <div className="home-news-title">
@@ -110,17 +137,17 @@ export default function HomePanel({ isActive, onNavigate }: HomePanelProps) {
               </a>
             </div>
             {newsItems.map((item, index) => (
-              <div key={index} className="news-item">
-                <div className={`news-item-thumb ${item.thumbClass}`}>{item.icon}</div>
+              <div key={item.id} className="news-item">
+                <div className={`news-item-thumb ${THUMB_CLASSES[index % THUMB_CLASSES.length]}`}>{item.icon}</div>
                 <div>
                   <div className="news-item-tag">{item.tag}</div>
                   <div className="news-item-title">{item.title}</div>
-                  <div className="news-item-date">{item.date}</div>
+                  <div className="news-item-date">{formatDate(item.publishedAt)}</div>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <div className="home-quick">
             {quickItems.map((item, index) => (
               <div key={index} className="quick-item" onClick={() => onNavigate(item.page)}>

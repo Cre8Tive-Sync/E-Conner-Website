@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -s -X POST http://localhost:3001/api/seed)",
+      "Bash(curl -v -X POST http://localhost:3002/api/seed)",
+      "Read(//tmp/**)",
+      "Bash(curl -s -X POST http://localhost:3002/api/contact -H \"Content-Type: application/json\" -d '{\"fullName\":\"Juan dela Cruz\",\"email\":\"juan@test.com\",\"department\":\"Tourism Office\",\"subject\":\"Test\",\"message\":\"Hello from the test\"}')"
+    ]
+  }
+}
