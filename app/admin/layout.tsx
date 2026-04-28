@@ -33,29 +33,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="min-h-screen flex" style={{ fontFamily: 'Outfit, sans-serif', background: '#f4f6f8' }}>
+    <div className="min-h-screen flex" style={{ fontFamily: 'Outfit, sans-serif', background: '#f0f2f5' }}>
 
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-60 flex flex-col transform transition-transform duration-200 lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
-        style={{ background: '#0d1b12', borderRight: '1px solid rgba(255,255,255,0.05)' }}
+        style={{ background: '#0d1b12', borderRight: '1px solid rgba(255,255,255,0.06)' }}
       >
         {/* Brand */}
         <div className="h-16 flex items-center gap-3 px-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-            style={{ background: 'rgba(76,175,121,0.15)', border: '1px solid rgba(76,175,121,0.3)' }}>
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+            style={{ background: 'rgba(76,175,121,0.18)', border: '1px solid rgba(76,175,121,0.3)' }}
+          >
             🌿
           </div>
           <div>
             <div className="text-white text-xs font-semibold leading-tight">Conner Admin</div>
-            <div className="text-xs mt-0.5" style={{ color: 'rgba(76,175,121,0.7)' }}>Content Portal</div>
+            <div className="text-[11px] mt-0.5" style={{ color: 'rgba(76,175,121,0.7)' }}>Content Portal</div>
           </div>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 py-4 overflow-y-auto px-3 space-y-0.5">
+        <nav className="flex-1 py-3 overflow-y-auto px-3 space-y-0.5">
           {navItems.map(({ href, label, icon: Icon, exact }) => {
             const active = exact ? pathname === href : pathname.startsWith(href)
             return (
@@ -63,17 +65,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={href}
                 href={href}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all group"
-                style={active
-                  ? { background: 'rgba(76,175,121,0.15)', color: '#4caf79' }
-                  : { color: 'rgba(255,255,255,0.45)' }
-                }
-                onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.85)' }}
-                onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.45)' } }}
+                className={[
+                  'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                  active
+                    ? 'bg-[rgba(76,175,121,0.16)] text-[#4caf79]'
+                    : 'text-[rgba(255,255,255,0.45)] hover:bg-[rgba(255,255,255,0.06)] hover:text-[rgba(255,255,255,0.88)]',
+                ].join(' ')}
               >
-                <Icon size={15} />
+                <Icon size={15} className="flex-shrink-0" />
                 <span className="flex-1">{label}</span>
-                {active && <ChevronRight size={12} style={{ color: 'rgba(76,175,121,0.6)' }} />}
+                {active && <ChevronRight size={12} className="text-[rgba(76,175,121,0.55)]" />}
               </Link>
             )
           })}
@@ -84,22 +85,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-            style={{ color: 'rgba(255,255,255,0.35)' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.7)'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)'; (e.currentTarget as HTMLElement).style.background = 'transparent' }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[rgba(255,255,255,0.35)] hover:bg-[rgba(255,255,255,0.06)] hover:text-[rgba(255,255,255,0.7)] transition-colors"
           >
-            <ExternalLink size={14} />
+            <ExternalLink size={14} className="flex-shrink-0" />
             View Public Site
           </Link>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all"
-            style={{ color: 'rgba(255,255,255,0.35)' }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f87171'; (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.08)' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)'; (e.currentTarget as HTMLElement).style.background = 'transparent' }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[rgba(255,255,255,0.35)] hover:bg-[rgba(239,68,68,0.1)] hover:text-[#f87171] transition-colors"
           >
-            <LogOut size={14} />
+            <LogOut size={14} className="flex-shrink-0" />
             Log Out
           </button>
         </div>
@@ -107,18 +102,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden" style={{ background: 'rgba(0,0,0,0.5)' }}
-          onClick={() => setMobileOpen(false)} />
+        <div
+          className="fixed inset-0 z-40 lg:hidden bg-black/50"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
       {/* Main content */}
       <div className="flex-1 lg:ml-60 flex flex-col min-h-screen">
 
         {/* Top bar */}
-        <header className="h-14 flex items-center px-5 gap-4 sticky top-0 z-30"
-          style={{ background: '#fff', borderBottom: '1px solid #e8ecf0' }}>
-          <button className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}>
+        <header className="h-14 flex items-center px-5 gap-4 sticky top-0 z-30 bg-white border-b border-gray-200/80">
+          <button
+            className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 transition-colors"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
 
@@ -135,14 +133,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <div className="flex-1" />
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 text-xs text-gray-400">
-              <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                style={{ background: 'linear-gradient(135deg, #2d7a4f, #4caf79)' }}>
-                A
-              </div>
-              Admin
+          <div className="hidden sm:flex items-center gap-2 text-xs text-gray-500">
+            <div
+              className="w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold"
+              style={{ background: 'linear-gradient(135deg, #2d7a4f, #4caf79)' }}
+            >
+              A
             </div>
+            <span>Admin</span>
           </div>
         </header>
 
