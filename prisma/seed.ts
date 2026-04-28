@@ -1,8 +1,11 @@
-import { PrismaClient } from '../lib/generated/prisma/client.ts';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import path from 'path';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../lib/generated/prisma/client';
 
-const adapter = new PrismaBetterSqlite3({ url: path.resolve(process.cwd(), 'prisma/dev.db') });
+if (!process.env.DATABASE_URL) {
+  throw new Error('DATABASE_URL is required to seed the database.');
+}
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {

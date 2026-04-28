@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 // One-time seed endpoint — only available in development
 export async function POST() {
   if (process.env.NODE_ENV === 'production') {
