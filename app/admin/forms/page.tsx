@@ -24,9 +24,15 @@ export default function FormsPage() {
 
   async function load() {
     setLoading(true)
-    const res = await fetch('/api/admin/forms')
-    setItems(await res.json())
-    setLoading(false)
+    try {
+      const res = await fetch('/api/admin/forms')
+      const data = await res.json()
+      setItems(Array.isArray(data) ? data : [])
+    } catch {
+      setItems([])
+    } finally {
+      setLoading(false)
+    }
   }
   useEffect(() => { load() }, [])
 

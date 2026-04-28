@@ -20,7 +20,8 @@ export default function ContactsPage() {
   useEffect(() => {
     fetch('/api/admin/contacts')
       .then(r => r.json())
-      .then(data => { setItems(data); setLoading(false) })
+      .then(data => { setItems(Array.isArray(data) ? data : []); setLoading(false) })
+      .catch(() => { setItems([]); setLoading(false) })
   }, [])
 
   return (

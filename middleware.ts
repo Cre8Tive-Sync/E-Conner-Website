@@ -20,6 +20,8 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname === '/admin/login') return NextResponse.next()
+  if (pathname === '/api/admin/auth/login') return NextResponse.next()
+  if (pathname === '/api/admin/auth/logout') return NextResponse.next()
 
   if (!(await isAuthenticated(request))) {
     if (pathname.startsWith('/api/')) {

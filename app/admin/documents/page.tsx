@@ -28,9 +28,15 @@ export default function DocumentsPage() {
 
   async function load() {
     setLoading(true)
-    const res = await fetch('/api/admin/documents')
-    setItems(await res.json())
-    setLoading(false)
+    try {
+      const res = await fetch('/api/admin/documents')
+      const data = await res.json()
+      setItems(Array.isArray(data) ? data : [])
+    } catch {
+      setItems([])
+    } finally {
+      setLoading(false)
+    }
   }
   useEffect(() => { load() }, [])
 

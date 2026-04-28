@@ -6,7 +6,11 @@
       "Bash(curl -v -X POST http://localhost:3002/api/seed)",
       "Read(//tmp/**)",
       "Bash(curl -s -X POST http://localhost:3002/api/contact -H \"Content-Type: application/json\" -d '{\"fullName\":\"Juan dela Cruz\",\"email\":\"juan@test.com\",\"department\":\"Tourism Office\",\"subject\":\"Test\",\"message\":\"Hello from the test\"}')",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(node -e \"require\\('@prisma/adapter-better-sqlite3'\\)\")",
+      "Bash(node -e \"const { PrismaBetterSQLite3 } = require\\('@prisma/adapter-better-sqlite3'\\); console.log\\(typeof PrismaBetterSQLite3\\);\")",
+      "Bash(node -e \"console.log\\(Object.keys\\(require\\('@prisma/adapter-better-sqlite3'\\)\\)\\);\")",
+      "Bash(node -e ' *)"
     ]
   }
 }
