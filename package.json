@@ -19,6 +19,7 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "jose": "^6.2.3",
     "lucide-react": "^1.11.0",
@@ -31,7 +32,6 @@
     "@libsql/client": "^0.17.3",
     "@prisma/adapter-better-sqlite3": "^7.8.0",
     "@prisma/adapter-libsql": "^7.8.0",
-    "@prisma/adapter-pg": "^7.8.0",
     "@types/better-sqlite3": "^7.6.13",
     "better-sqlite3": "^12.9.0",
     "@types/node": "^20",
