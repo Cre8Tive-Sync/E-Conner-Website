@@ -10,7 +10,12 @@
       "Bash(node -e \"require\\('@prisma/adapter-better-sqlite3'\\)\")",
       "Bash(node -e \"const { PrismaBetterSQLite3 } = require\\('@prisma/adapter-better-sqlite3'\\); console.log\\(typeof PrismaBetterSQLite3\\);\")",
       "Bash(node -e \"console.log\\(Object.keys\\(require\\('@prisma/adapter-better-sqlite3'\\)\\)\\);\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(Get-ChildItem -Path \"d:\\\\Projekts\\\\Cre8Tive Sync\\\\EConner Website\\\\E-Conner-Website\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)"
     ]
   }
 }
