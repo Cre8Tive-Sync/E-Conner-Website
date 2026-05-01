@@ -34,9 +34,9 @@ export default function RootLayout({
         <Image
           src="/images/BETA TAG.png"
           alt="Beta"
-          width={120}
-          height={120}
-          style={{ position: "fixed", top: 0, left: 0, zIndex: 9999, pointerEvents: "none" }}
+          width={160}
+          height={160}
+          style={{ position: "fixed", top: -25, left: -25, zIndex: 9999, pointerEvents: "none" }}
           priority
         />
         {children}
