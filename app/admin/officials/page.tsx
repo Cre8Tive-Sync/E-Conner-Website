@@ -240,7 +240,7 @@ export default function OfficialsPage() {
                   type="text" value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   required
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
               </div>
               <div>
@@ -251,7 +251,7 @@ export default function OfficialsPage() {
                   type="text" value={form.position}
                   onChange={e => setForm(f => ({ ...f, position: e.target.value }))}
                   required placeholder="e.g. Municipal Mayor"
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
               </div>
               <div>
@@ -260,7 +260,7 @@ export default function OfficialsPage() {
                   type="text" value={form.badge}
                   onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}
                   placeholder="Optional — e.g. 1st District, SB Member"
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
               </div>
               <div>
@@ -268,7 +268,7 @@ export default function OfficialsPage() {
                 <input
                   type="number" value={form.order}
                   onChange={e => setForm(f => ({ ...f, order: parseInt(e.target.value) || 0 }))}
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
                 <p className="text-xs text-gray-400 mt-1">Lower numbers appear first (Mayor = 1).</p>
               </div>

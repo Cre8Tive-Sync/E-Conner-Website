@@ -243,7 +243,7 @@ export default function FormsPage() {
                   type="text" value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                   required
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
               </div>
               <div>
@@ -254,7 +254,7 @@ export default function FormsPage() {
                   type="text" value={form.office}
                   onChange={e => setForm(f => ({ ...f, office: e.target.value }))}
                   required placeholder="e.g. Municipal Civil Registry Office"
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
               </div>
               <div>
@@ -263,7 +263,7 @@ export default function FormsPage() {
                   type="url" value={form.fileUrl}
                   onChange={e => setForm(f => ({ ...f, fileUrl: e.target.value }))}
                   placeholder="https://drive.google.com/…"
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
                 <p className="text-xs text-gray-400 mt-1">Paste a public Google Drive, OneDrive, or Dropbox link.</p>
               </div>
@@ -272,7 +272,7 @@ export default function FormsPage() {
                 <input
                   type="number" value={form.order}
                   onChange={e => setForm(f => ({ ...f, order: parseInt(e.target.value) || 0 }))}
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
                 <p className="text-xs text-gray-400 mt-1">Lower numbers appear first.</p>
               </div>

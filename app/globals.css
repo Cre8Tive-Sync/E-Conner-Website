@@ -253,6 +253,7 @@ body { font-family: var(--sans); background: var(--forest); color: white; cursor
 .form-input, .form-select, .form-textarea { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(76,175,121,0.12); color: white; font-family: var(--sans); font-size: 14px; outline: none; border-radius: 8px; transition: border-color .25s; -webkit-appearance: none; }
 .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
 .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: rgba(76,175,121,0.4); background: rgba(255,255,255,0.07); }
+.form-input:-webkit-autofill, .form-select:-webkit-autofill, .form-textarea:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #0d2b1a inset !important; -webkit-text-fill-color: white !important; caret-color: white; }
 .form-select option { background: var(--deep); color: white; }
 .form-textarea { min-height: 110px; resize: vertical; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -274,6 +275,15 @@ body { font-family: var(--sans); background: var(--forest); color: white; cursor
 .toast { position: fixed; bottom: 28px; right: 28px; z-index: 9999; background: rgba(26,77,46,0.97); border: 1px solid rgba(76,175,121,0.3); padding: 14px 20px; border-radius: 10px; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(12px); transform: translateY(80px); opacity: 0; transition: all .4s ease; }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast-text { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+/* Prevent browser autofill from overriding dark backgrounds */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #0d2b1a inset !important;
+  -webkit-text-fill-color: white !important;
+  caret-color: white;
+}
 
 @layer utilities {
   .text-balance {

@@ -267,7 +267,7 @@ export default function NewsPage() {
                     type="text" value={form.title}
                     onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                     required
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                   />
                 </div>
                 <div>
@@ -277,7 +277,7 @@ export default function NewsPage() {
                   <select
                     value={form.tag}
                     onChange={e => setForm(f => ({ ...f, tag: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                   >
                     {TAGS.map(t => <option key={t}>{t}</option>)}
                   </select>
@@ -287,7 +287,7 @@ export default function NewsPage() {
                   <input
                     type="text" value={form.icon}
                     onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                   />
                 </div>
                 <div className="col-span-2">
@@ -299,7 +299,7 @@ export default function NewsPage() {
                     onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))}
                     rows={2} required
                     placeholder="Short summary shown in article cards…"
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-none bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-none bg-gray-50 text-gray-900 transition"
                   />
                 </div>
                 <div className="col-span-2">
@@ -309,7 +309,7 @@ export default function NewsPage() {
                     onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
                     rows={6}
                     placeholder="Full article content…"
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-y bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-y bg-gray-50 text-gray-900 transition"
                   />
                 </div>
                 <div>
@@ -320,7 +320,7 @@ export default function NewsPage() {
                     type="datetime-local" value={form.publishedAt}
                     onChange={e => setForm(f => ({ ...f, publishedAt: e.target.value }))}
                     required
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                   />
                 </div>
                 <div className="flex items-end pb-1">

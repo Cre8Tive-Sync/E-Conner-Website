@@ -235,7 +235,7 @@ export default function TourismPage() {
                   <input
                     type="text" value={form.icon}
                     onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xl text-center focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xl text-center focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                   />
                 </div>
                 <div className="col-span-3">
@@ -246,7 +246,7 @@ export default function TourismPage() {
                     type="text" value={form.name}
                     onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                     required
-                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                    className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                   />
                 </div>
               </div>
@@ -258,7 +258,7 @@ export default function TourismPage() {
                   value={form.description}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                   rows={4} required
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-none bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 resize-none bg-gray-50 text-gray-900 transition"
                 />
               </div>
               <div>
@@ -266,7 +266,7 @@ export default function TourismPage() {
                 <input
                   type="number" value={form.order}
                   onChange={e => setForm(f => ({ ...f, order: parseInt(e.target.value) || 0 }))}
-                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 transition"
+                  className="w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500 bg-gray-50 text-gray-900 transition"
                 />
                 <p className="text-xs text-gray-400 mt-1">Lower numbers appear first.</p>
               </div>
