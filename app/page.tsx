@@ -1,110 +1,26 @@
-'use client';
-
-import { useState, useEffect, useCallback } from 'react';
-import { NavPage, NavConfig } from '@/lib/types';
-import Preloader from '@/components/Preloader';
-import CustomCursor from '@/components/CustomCursor';
-import Ambient from '@/components/Ambient';
-import Rail from '@/components/Rail';
-import Topbar from '@/components/Topbar';
-import Toast from '@/components/Toast';
-import HomePanel from '@/components/panels/HomePanel';
-import ProfilePanel from '@/components/panels/ProfilePanel';
-import NewsPanel from '@/components/panels/NewsPanel';
-import ServicesPanel from '@/components/panels/ServicesPanel';
-import TransparencyPanel from '@/components/panels/TransparencyPanel';
-import TourismPanel from '@/components/panels/TourismPanel';
-import ContactPanel from '@/components/panels/ContactPanel';
-
-const navConfig: Record<NavPage, NavConfig> = {
-  home: { title: 'Municipality of Conner', sub: 'Official Website', tabs: [] },
-  profile: { title: 'Municipal Profile', sub: 'Conner, Apayao', tabs: ['Overview', 'Officials', 'Barangays'] },
-  news: { title: 'News & Announcements', sub: 'Latest Updates', tabs: ['All', 'News', 'Announcements', 'Events'] },
-  services: { title: 'Online Services', sub: 'Government Services', tabs: ['All Services', 'Forms', 'Guides'] },
-  transparency: { title: 'Transparency Portal', sub: 'NBC 542 Compliant', tabs: ['All Documents', 'Budget', 'Ordinances', 'FOI'] },
-  tourism: { title: 'Tourism', sub: 'Discover Conner', tabs: ['Destinations', 'Culture', 'Contact'] },
-  contact: { title: 'Contact & Feedback', sub: 'Get In Touch', tabs: [] },
-};
-
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState<NavPage>('home');
-  const [time, setTime] = useState('--:--:--');
-  const [showToast, setShowToast] = useState(false);
-
-  // Clock ticker
-  useEffect(() => {
-    const tick = () => {
-      const t = new Date().toLocaleTimeString('en-PH', {
-        timeZone: 'Asia/Manila',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      });
-      setTime(t);
-    };
-    tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Preloader dismiss
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleNavigate = useCallback((page: NavPage) => {
-    if (currentPage !== page) {
-      setCurrentPage(page);
-    }
-  }, [currentPage]);
-
-  const handleSendMessage = useCallback(() => {
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 4000);
-  }, []);
-
   return (
-    <>
-      <Preloader isVisible={isLoading} />
-      <CustomCursor />
-      <Ambient />
-      
-      <Rail 
-        currentPage={currentPage} 
-        onNavigate={handleNavigate} 
-        time={time} 
-      />
-      
-      <div className="main">
-        <Topbar 
-          currentPage={currentPage} 
-          navConfig={navConfig} 
-          time={time} 
-        />
-        
-        <div className="content">
-          <HomePanel 
-            isActive={currentPage === 'home'} 
-            onNavigate={handleNavigate} 
-          />
-          <ProfilePanel isActive={currentPage === 'profile'} />
-          <NewsPanel isActive={currentPage === 'news'} />
-          <ServicesPanel isActive={currentPage === 'services'} />
-          <TransparencyPanel isActive={currentPage === 'transparency'} />
-          <TourismPanel isActive={currentPage === 'tourism'} />
-          <ContactPanel 
-            isActive={currentPage === 'contact'} 
-            onSendMessage={handleSendMessage} 
-          />
+    <main
+      className="relative flex min-h-screen w-screen items-center justify-center overflow-hidden bg-[#07120c] px-6 py-12 text-white"
+      style={{ cursor: "default", userSelect: "text" }}
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(76,175,121,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(200,146,42,0.16),transparent_34%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#4caf79] to-transparent opacity-50" />
+
+      <section className="relative w-full max-w-2xl text-center">
+        <div className="mb-8 inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-[#a8d5b5]">
+          Website Temporarily Disabled
         </div>
-      </div>
-      
-      <Toast isVisible={showToast} />
-    </>
+
+        <h1 className="font-serif text-4xl font-light leading-tight text-white sm:text-5xl">
+          Temporary disabled until client has fully paid all remaining balance.
+        </h1>
+
+        <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-white/55 sm:text-base">
+          This website is currently unavailable. Full service will be restored
+          after the outstanding balance has been settled.
+        </p>
+      </section>
+    </main>
   );
 }

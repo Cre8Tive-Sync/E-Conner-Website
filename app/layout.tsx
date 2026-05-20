@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
-import Image from "next/image";
 import "./globals.css";
 
 const cormorantGaramond = Cormorant_Garamond({
@@ -31,14 +30,6 @@ export default function RootLayout({
       <body
         className={`${cormorantGaramond.variable} ${outfit.variable}`}
       >
-        <Image
-          src="/images/BETA TAG.png"
-          alt="Beta"
-          width={160}
-          height={160}
-          style={{ position: "fixed", top: -25, left: -25, zIndex: 9999, pointerEvents: "none" }}
-          priority
-        />
         {children}
       </body>
     </html>
