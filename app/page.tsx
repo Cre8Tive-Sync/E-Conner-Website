@@ -1,26 +1,114 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import Ambient from '@/components/Ambient';
+import CustomCursor from '@/components/CustomCursor';
+import Preloader from '@/components/Preloader';
+import Rail from '@/components/Rail';
+import Toast from '@/components/Toast';
+import Topbar from '@/components/Topbar';
+import ContactPanel from '@/components/panels/ContactPanel';
+import HomePanel from '@/components/panels/HomePanel';
+import NewsPanel from '@/components/panels/NewsPanel';
+import ProfilePanel from '@/components/panels/ProfilePanel';
+import ServicesPanel from '@/components/panels/ServicesPanel';
+import TourismPanel from '@/components/panels/TourismPanel';
+import TransparencyPanel from '@/components/panels/TransparencyPanel';
+import { NavConfig, NavPage } from '@/lib/types';
+
+const navConfig: Record<NavPage, NavConfig> = {
+  home: {
+    title: 'Municipality of Conner',
+    sub: 'Official Government Portal',
+    tabs: ['Overview', 'Highlights', 'Quick Access'],
+  },
+  profile: {
+    title: 'Municipal Profile',
+    sub: 'History, Leadership, Barangays',
+    tabs: ['History', 'Officials', 'Barangays'],
+  },
+  news: {
+    title: 'News and Announcements',
+    sub: 'Latest Public Updates',
+    tabs: ['All', 'News', 'Announcements'],
+  },
+  services: {
+    title: 'Online Services',
+    sub: 'Forms and Citizen Services',
+    tabs: ['Services', 'Forms', 'Downloads'],
+  },
+  transparency: {
+    title: 'Transparency Portal',
+    sub: 'Open Government Documents',
+    tabs: ['Documents', 'Compliance', 'Archive'],
+  },
+  tourism: {
+    title: 'Tourism',
+    sub: 'Explore Conner',
+    tabs: ['Destinations', 'Culture', 'Visit'],
+  },
+  contact: {
+    title: 'Contact and Feedback',
+    sub: 'Reach the Municipal Government',
+    tabs: ['Message', 'Offices', 'Directory'],
+  },
+};
+
+function getPhtTime(now: Date) {
+  return now.toLocaleTimeString('en-PH', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Manila',
+  });
+}
+
 export default function Home() {
+  const [currentPage, setCurrentPage] = useState<NavPage>('home');
+  const [showPreloader, setShowPreloader] = useState(true);
+  const [showToast, setShowToast] = useState(false);
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const preloaderTimeout = setTimeout(() => setShowPreloader(false), 1200);
+    return () => clearTimeout(preloaderTimeout);
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const time = useMemo(() => getPhtTime(now), [now]);
+
+  function handleContactSuccess() {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3200);
+  }
+
   return (
-    <main
-      className="relative flex min-h-screen w-screen items-center justify-center overflow-hidden bg-[#07120c] px-6 py-12 text-white"
-      style={{ cursor: "default", userSelect: "text" }}
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(76,175,121,0.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(200,146,42,0.16),transparent_34%)]" />
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#4caf79] to-transparent opacity-50" />
+    <>
+      <Preloader isVisible={showPreloader} />
+      <Ambient />
+      <CustomCursor />
 
-      <section className="relative w-full max-w-2xl text-center">
-        <div className="mb-8 inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-[#a8d5b5]">
-          Website Temporarily Disabled
+      <Rail currentPage={currentPage} onNavigate={setCurrentPage} time={time} />
+
+      <main className="main">
+        <Topbar currentPage={currentPage} navConfig={navConfig} time={time} />
+
+        <div className="content">
+          <HomePanel isActive={currentPage === 'home'} onNavigate={setCurrentPage} />
+          <ProfilePanel isActive={currentPage === 'profile'} />
+          <NewsPanel isActive={currentPage === 'news'} />
+          <ServicesPanel isActive={currentPage === 'services'} />
+          <TransparencyPanel isActive={currentPage === 'transparency'} />
+          <TourismPanel isActive={currentPage === 'tourism'} />
+          <ContactPanel isActive={currentPage === 'contact'} onSendMessage={handleContactSuccess} />
         </div>
+      </main>
 
-        <h1 className="font-serif text-4xl font-light leading-tight text-white sm:text-5xl">
-          Temporary disabled until client has fully paid all remaining balance.
-        </h1>
-
-        <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-white/55 sm:text-base">
-          This website is currently unavailable. Full service will be restored
-          after the outstanding balance has been settled.
-        </p>
-      </section>
-    </main>
+      <Toast isVisible={showToast} />
+    </>
   );
 }
